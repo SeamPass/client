@@ -56,7 +56,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
 
       {updatedAction?.map(({ Component, ...item }) => (
         <Dialog open={item.open} onOpenChange={item.action}>
-          <Component open={item.open} setOpen={item.action} />
+          <Component id={id} open={item.open} setOpen={item.action} />
         </Dialog>
       ))}
     </div>

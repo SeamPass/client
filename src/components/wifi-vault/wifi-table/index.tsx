@@ -3,7 +3,7 @@ import TableComponent from "@/shared/components/table";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/shared/components/button";
 import DashboardHeader from "@/shared/components/dashboard-header";
-import { Add01Icon } from "hugeicons-react";
+import { Add01Icon, Copy01Icon, ViewIcon } from "hugeicons-react";
 import { useContext, useEffect, useState } from "react";
 import usePaginate from "@/hooks/usePaginate";
 import DeleteModal from "@/shared/components/modal/delete-modal";
@@ -11,12 +11,14 @@ import { GlobalContext } from "@/context/globalContext";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
 import { Checkbox } from "@/components/ui/checkbox";
 import Text from "@/shared/components/typography";
-import EditWifi from "../wifi-modal/edit-wifi";
 import ViewWifi from "../wifi-modal/view-wifi";
 import DesktopTableAction from "./desktop-table-action";
 import MobileTableAction from "./mobile-table-action";
 import AddWifi from "../wifi-modal/add-wifi";
 import useGetWifiQuery, { IGetWifiProps } from "@/api/wifi/get-wifi";
+import EditWifi from "../wifi-modal/edit-wifi/edit-wifi";
+import { convertDate } from "@/utils/convertDateFormat";
+import copyToClipboard from "@/utils/copy-to-clipboard";
 
 const WifiTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
@@ -28,7 +30,9 @@ const WifiTable = () => {
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [decryptedData, setDecryptedData] = useState<any>([]);
-
+  const [passwordVisibility, setPasswordVisibility] = useState<{
+    [key: string]: boolean;
+  }>({});
   const tableHeaders = ["Wifi name", "Wifi password", "Date created", "Action"];
 
   useEffect(() => {
@@ -54,6 +58,8 @@ const WifiTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
+  console.log(decryptedData);
+
   const handleCheckboxChange = (itemId: string) => {
     setIsTableDataSelected((prevState: string[]) => {
       const isAlreadySelected = prevState.includes(itemId);
@@ -63,6 +69,13 @@ const WifiTable = () => {
         return [...prevState, itemId];
       }
     });
+  };
+
+  const togglePasswordVisibility = (itemId: string) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [itemId]: !prevState[itemId],
+    }));
   };
 
   const actions = [
@@ -93,8 +106,22 @@ const WifiTable = () => {
         </Text>
       </div>
     ),
-    [tableHeaders[1]]: item.createdAt,
-    [tableHeaders[2]]: item.updatedAt,
+    [tableHeaders[1]]: (
+      <div className="flex items-center justify-center space-x-[10px]">
+        <span>{passwordVisibility[item.id] ? item.wifiPassword : "*****"}</span>
+        <div className="flex items-center ">
+          <ViewIcon
+            onClick={() => togglePasswordVisibility(item.id)}
+            className="mr-[10px] size-[20px] text-primary-500 cursor-pointer"
+          />
+          <Copy01Icon
+            onClick={() => copyToClipboard(item.wifiPassword)}
+            className=" text-primary-500 size-[20px] cursor-pointer"
+          />
+        </div>
+      </div>
+    ),
+    [tableHeaders[2]]: convertDate(item.createdAt),
     [tableHeaders[3]]: (
       <DesktopTableAction
         id={item.id}

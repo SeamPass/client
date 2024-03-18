@@ -48,9 +48,9 @@ const Login = () => {
       // .catch((err) => {
       //   console.log(err);
       // });
-      console.log(response);
+    
       const { success, accessToken, message, expiresIn } = response;
-      console.log(accessToken);
+     
       apiMessageHelper({
         success,
         message: message ?? "Login Successful",

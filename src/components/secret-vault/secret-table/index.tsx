@@ -17,6 +17,7 @@ import AddSecret from "../secret-modal-content/add-secret";
 import useGetSecretQuery, { IGetSecretProps } from "@/api/secret/get-secret";
 import { Checkbox } from "@/components/ui/checkbox";
 import Text from "@/shared/components/typography";
+import { convertDate } from "@/utils/convertDateFormat";
 
 const PasswordTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
@@ -93,8 +94,8 @@ const PasswordTable = () => {
         </Text>
       </div>
     ),
-    [tableHeaders[1]]: item.createdAt,
-    [tableHeaders[2]]: item.updatedAt,
+    [tableHeaders[1]]: convertDate(item.createdAt),
+    [tableHeaders[2]]: convertDate(item.updatedAt),
     [tableHeaders[3]]: (
       <DesktopTableAction
         id={item.id}

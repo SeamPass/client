@@ -18,7 +18,6 @@ interface AddPasswordProps {
 const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
   // const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
-  console.log(encryptionKey);
   const { mutateAsync } = useAddUserPasswordMutation();
 
   const formik = useFormik({
@@ -58,10 +57,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       apiMessageHelper({
         success,
         message: message,
+        onSuccessCallback() {
+          setOpen(false);
+        },
       });
     },
-
-    //   setOpen(false);
   });
 
   return (
@@ -115,7 +115,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
               <div className="h-1 w-full bg-primary-500" />
             </div>
             <div className="flex items-center gap-3 mt-[33px]">
-              <Button onClick={() => setOpen(false)} variant="tertiary">
+              <Button
+                type="button"
+                onClick={() => setOpen(false)}
+                variant="tertiary"
+              >
                 Cancel
               </Button>
               <Button type="submit" variant="primary">

@@ -15,9 +15,8 @@ interface AddSecretProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }
-const AddSecret: React.FC<AddSecretProps> = () => {
+const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  console.log(encryptionKey);
   const { mutateAsync } = useAddSecretMutation();
 
   const formik = useFormik({
@@ -44,6 +43,9 @@ const AddSecret: React.FC<AddSecretProps> = () => {
       apiMessageHelper({
         success,
         message: message,
+        onSuccessCallback: () => {
+          setOpen(false);
+        },
       });
 
       console.log({
@@ -51,8 +53,6 @@ const AddSecret: React.FC<AddSecretProps> = () => {
         note: { encNote: encryptedNote, iv: ivNoteBase64 },
       });
     },
-
-    //   setOpen(false);
   });
 
   return (

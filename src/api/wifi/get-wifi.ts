@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 export interface IGetWifiProps {
   id: string;
   wifiName: string;
-  note: { encWifiPassword: string; iv: string };
+  wifiPassword: string;
   createdAt: string;
   updatedAt: string;
 }

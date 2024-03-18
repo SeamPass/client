@@ -15,7 +15,7 @@ import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 interface EditPasswordProps {
   open: boolean;
-  setOpen: () => void;
+  setOpen: React.Dispatch<boolean>;
   id: string;
 }
 const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
@@ -78,9 +78,10 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
       apiMessageHelper({
         success,
         message: message,
+        onSuccessCallback: () => {
+          setOpen(false);
+        },
       });
-
-      setOpen();
     },
   });
 
@@ -132,7 +133,11 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
               <div className="h-1 w-full bg-primary-500" />
             </div>
             <div className="flex items-center gap-3 mt-[33px]">
-              <Button onClick={setOpen} variant="tertiary">
+              <Button
+                type="button"
+                onClick={() => setOpen(false)}
+                variant="tertiary"
+              >
                 Cancel
               </Button>
               <Button type="submit" variant="primary">

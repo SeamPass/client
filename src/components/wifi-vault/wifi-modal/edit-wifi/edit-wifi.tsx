@@ -1,26 +1,48 @@
-import useAddWifiMutation from "@/api/wifi/add-wifi";
+import useEditWifiMutation from "@/api/wifi/edit-wifi";
+import useGetSingleWifiQuery from "@/api/wifi/get-single-wifi";
 import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
 import { Button } from "@/shared/components/button";
 import ModalHeader from "@/shared/modal-header";
-import { encryptUserData } from "@/utils/EncryptDecrypt";
+import { decryptUserData, encryptUserData } from "@/utils/EncryptDecrypt";
 import { useFormik } from "formik";
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect } from "react";
 
-interface AddWifiProps {
+interface EditWifiProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
+  id: string;
 }
 
-const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
+const EditWifi: FC<EditWifiProps> = ({ setOpen, id }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useAddWifiMutation();
+  const { mutateAsync } = useEditWifiMutation(id);
+  const { data: wifiData } = useGetSingleWifiQuery(id);
+
+  useEffect(() => {
+    if (!wifiData?.data || !encryptionKey) return;
+
+    const decryptData = async () => {
+      const decryptedWifi = await decryptUserData(
+        wifiData.data.wifiPassword.encWifiPassword,
+        wifiData.data.wifiPassword.iv,
+        encryptionKey
+      );
+
+      formik.setValues({
+        wifiName: wifiData.data.wifiName,
+        wifiPassword: decryptedWifi,
+      });
+    };
+
+    decryptData();
+  }, [wifiData, encryptionKey]);
 
   const formik = useFormik({
     initialValues: {
-      wifiNAme: "",
+      wifiName: "",
       wifiPassword: "",
     },
     // validationSchema: createValidationSchema({
@@ -35,7 +57,7 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
       } = await encryptUserData(values.wifiPassword, encryptionKey);
 
       const response = await mutateAsync({
-        wifiName: values.wifiNAme,
+        wifiName: values.wifiName,
         wifiPassword: {
           encWifiPassword: encryptedWifiPassword,
           iv: ivWifiPasswordBase64,
@@ -53,15 +75,12 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
       });
     },
   });
-
+  console.log(formik.values.wifiName);
   return (
     <>
       <DialogContent>
         <DialogDescription>
-          <ModalHeader
-            subText="Let PassSafe save your Wifi details for you"
-            title="Add Wifi Details"
-          />
+          <ModalHeader title="Edit Wifi Details" />
 
           <form
             onSubmit={formik.handleSubmit}
@@ -72,7 +91,7 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
               placeholder="Enter Secret note"
               name="wifiNAme"
               onChange={formik.handleChange}
-              value={formik.values.wifiNAme}
+              value={formik.values.wifiName}
             />
             <Input
               type="password"
@@ -93,4 +112,4 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
   );
 };
 
-export default AddWifi;
+export default EditWifi;
