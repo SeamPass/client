@@ -148,7 +148,7 @@ const PasswordTable = () => {
       <span
         style={{
           color: handlePasswordStrengthColors(
-            item.passwordStrength.toLowerCase()
+            item?.passwordStrength?.toLowerCase()
           ),
         }}
       >

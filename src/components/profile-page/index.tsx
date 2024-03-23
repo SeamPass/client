@@ -10,16 +10,28 @@ import {
   schemaValidation,
 } from "@/helpers/validation-schemas";
 import { Button } from "@/shared/components/button";
+import useGetUserQuery from "@/api/user/get-user";
+import { useEffect } from "react";
+import useUpdateUserMutation from "@/api/user/update-user";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-
+  const { data } = useGetUserQuery();
+  const { mutateAsync: updateUser } = useUpdateUserMutation();
   const { emailValidation, requiredFieldValidation } = schemaValidation;
+
+  useEffect(() => {
+    formik.setValues({
+      email: data?.user?.email,
+      nickname: data?.user?.nickname,
+    });
+  }, [data?.user]);
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      nickname: "",
+      email: data?.user?.email || "",
+      nickname: data?.user?.nickname || "",
     },
     validationSchema: createValidationSchema({
       email: emailValidation({
@@ -30,9 +42,15 @@ const ProfilePage = () => {
       }),
     }),
     onSubmit: async (values) => {
-      alert(JSON.stringify(values, null, 2));
+      const response = await updateUser({ nickname: values.nickname });
+      const { message, success } = response;
+      apiMessageHelper({
+        message,
+        success,
+      });
     },
   });
+
   return (
     <div>
       <div
@@ -54,13 +72,17 @@ const ProfilePage = () => {
           </span>
         </div>
         <div>
-          <div className="flex flex-col gap-y-[24px] mt-[24px] md:mt-0 lg:w-[443px]">
+          <form
+            onSubmit={formik.handleSubmit}
+            className="flex flex-col gap-y-[24px] mt-[24px] md:mt-0 lg:w-[443px]"
+          >
             <div>
               <Input
                 label="Email address"
                 type="email"
                 placeholder="Enter Email"
                 name="email"
+                disabled
                 onChange={formik.handleChange}
                 value={formik.values.email}
                 formikOnBlur={formik.handleBlur}
@@ -92,8 +114,10 @@ const ProfilePage = () => {
               />
             </div>
 
-            <Button variant="primary">Update</Button>
-          </div>
+            <Button type="submit" variant="primary">
+              Update
+            </Button>
+          </form>
         </div>
       </div>
     </div>

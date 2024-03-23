@@ -5,7 +5,7 @@ import Header from "@/shared/components/typography/Header";
 import Text from "@/shared/components/typography";
 import { Button } from "@/shared/components/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import { useFormik } from "formik";
 import {
   createValidationSchema,
@@ -60,14 +60,12 @@ const CreateAccount = () => {
             values.password,
             response.data.encryptionSalt
           );
-          // Generate an IV for encryption
 
+          // Generate an IV for encryption
           const { ciphertextBase64, ivBase64 } = await encryptUserData(
             response.data.sgek,
             udek
           );
-
-          console.log(response.data.sgek);
 
           if (ciphertextBase64 && ivBase64 && response) {
             await encryptionMutateAsync({
@@ -167,7 +165,7 @@ const CreateAccount = () => {
               </p>
             </div>
 
-            <div className="flex gap-2 text-[1rem]">
+            {/* <div className="flex gap-2 text-[1rem]">
               <Checkbox />
               <span className="">
                 <span className="text-grey-100">
@@ -177,7 +175,7 @@ const CreateAccount = () => {
                   PassSafe Terms and conditions
                 </span>
               </span>
-            </div>
+            </div> */}
 
             <Button type="submit" className="mt-6" variant="primary">
               Create account

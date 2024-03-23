@@ -20,7 +20,8 @@ import { deriveKey, importAESKeyFromHex } from "@/utils/keyUtils";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { handleLogin, setEncryptionKey } = useContext(GlobalContext);
+  const { handleLogin, setEncryptionKey, setPassword } =
+    useContext(GlobalContext);
   const { emailValidation, passwordValidation } = schemaValidation;
   const { mutateAsync } = useLoginMutation();
 
@@ -48,36 +49,40 @@ const Login = () => {
       // .catch((err) => {
       //   console.log(err);
       // });
-    
+
       const { success, accessToken, message, expiresIn } = response;
-     
+
       apiMessageHelper({
         success,
         message: message ?? "Login Successful",
         onSuccessCallback: async () => {
-          handleLogin && handleLogin(accessToken);
-          sessionStorage.setItem("accessToken", accessToken);
-          const adjustedExpiresIn = expiresIn - 60;
-          sessionStorage.setItem("expiresIn", adjustedExpiresIn.toString());
+          if (response.is2StepEnabled) {
+            setPassword && setPassword(values.password);
+            navigate(`/enter-otp?email=${values.email}`);
+          } else {
+            handleLogin && handleLogin(accessToken);
+            sessionStorage.setItem("accessToken", accessToken);
+            const adjustedExpiresIn = expiresIn - 60;
+            sessionStorage.setItem("expiresIn", adjustedExpiresIn.toString());
 
-          //decryption taking place here
-          const encryptionSalt = response?.userInfo?.ps;
-          const encryptedSGEKBase64 = response?.sgek;
-          const ivBase64 = response?.iv;
+            //decryption taking place here
+            const encryptionSalt = response?.userInfo?.ps;
+            const encryptedSGEKBase64 = response?.sgek;
+            const ivBase64 = response?.iv;
 
-          const udek = await deriveKey(values.password, encryptionSalt);
-          try {
-            const decryptedSGEK = await decryptUserData(
-              encryptedSGEKBase64,
-              ivBase64,
-              udek
-            );
+            const udek = await deriveKey(values.password, encryptionSalt);
+            try {
+              const decryptedSGEK = await decryptUserData(
+                encryptedSGEKBase64,
+                ivBase64,
+                udek
+              );
 
-            const sgek = await importAESKeyFromHex(decryptedSGEK);
-            setEncryptionKey && setEncryptionKey(sgek);
-          } catch (error) {
-            console.error("Decryption of SGEK failed:", error);
-            // Handle decryption failure (e.g., incorrect password or corrupted data)
+              const sgek = await importAESKeyFromHex(decryptedSGEK);
+              setEncryptionKey && setEncryptionKey(sgek);
+            } catch (error) {
+              console.error("Decryption of SGEK failed:", error);
+            }
           }
         },
       });

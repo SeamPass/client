@@ -54,9 +54,6 @@ const ExtendedNav = () => {
               >
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer">
-                Account Settings
-              </DropdownMenuItem>
               <DropdownMenuItem className="py-2 focus:bg-[#FFF4F3] focus:text-error-100 text-error-100 text-[1rem] cursor-pointer">
                 Logout
               </DropdownMenuItem>

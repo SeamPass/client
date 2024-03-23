@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // globalReducer.ts
 
 export interface GlobalState {
@@ -6,8 +7,9 @@ export interface GlobalState {
   };
   handleLogin?: (token: string) => void;
   setEncryptionKey?: React.Dispatch<React.SetStateAction<CryptoKey | null>>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   encryptionKey?: any;
+  password?: any;
+  setPassword?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export type GlobalAction =

@@ -27,11 +27,15 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       username: "",
       password: "",
     },
-    // validationSchema: createValidationSchema({
-    //   email: requiredFieldValidation({
-    //     errorMessage: "Enter your email",
-    //   }),
-    // }),
+    validate: (values) => {
+      const errors: { websiteUrl?: string } = {};
+      const urlRegex =
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+      if (!urlRegex.test(values?.websiteUrl)) {
+        errors.websiteUrl = "Invalid URL";
+      }
+      return errors;
+    },
     onSubmit: async (values) => {
       const {
         ciphertextBase64: encryptedUsername,
@@ -86,15 +90,21 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 type="text"
                 name="websiteUrl"
                 label="Website/URL(optional)"
-                placeholder="Enter Username"
+                placeholder="https://example.com"
                 onChange={formik.handleChange}
                 value={formik.values.websiteUrl}
+                error={
+                  formik.touched.websiteUrl && formik.errors.websiteUrl
+                    ? formik.errors.websiteUrl
+                    : ""
+                }
               />
+
               <Input
                 type="text"
                 name="username"
                 label="Username/Email address"
-                placeholder="Enter Username"
+                placeholder="Username/Email address"
                 onChange={formik.handleChange}
                 value={formik.values.username}
               />
@@ -102,7 +112,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 type="password"
                 label="Password"
                 name="password"
-                placeholder="Enter Username"
+                placeholder="Enter password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
               />

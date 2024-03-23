@@ -13,9 +13,9 @@ const usePaginate = (paginate: IPaginate) => {
     handlePaginate: () => void
   ) => {
     if (paginate.nextPage && direction === "next") {
-      handlePaginate();
+      hasNextPage && handlePaginate();
     } else {
-      handlePaginate();
+      hasPrevPage && handlePaginate();
     }
   };
 
