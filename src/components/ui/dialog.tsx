@@ -6,6 +6,11 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+interface IDialogContentProp
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+  customOverlay?: JSX.Element;
+}
+
 const Dialog = DialogPrimitive.Root;
 
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -31,10 +36,11 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  IDialogContentProp
+>(({ className, customOverlay, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
+    {customOverlay ?? <DialogOverlay />}
+
     <DialogPrimitive.Content
       ref={ref}
       className={cn(

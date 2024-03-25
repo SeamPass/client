@@ -1,24 +1,21 @@
 import { GlobalContext } from "@/context/globalContext";
-import Nav from "@/shared/components/navbar";
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const LockedRoute = () => {
+const UnlockedRoute = () => {
   const { encryptionKey } = useContext(GlobalContext);
-  console.log(encryptionKey);
 
   return (
     <>
-      {encryptionKey ? (
+      {!encryptionKey ? (
         <>
-          <Nav />
           <Outlet />
         </>
       ) : (
-        <Navigate to={"/locked"} />
+        <Navigate to={"/password-vault"} />
       )}
     </>
   );
 };
 
-export default LockedRoute;
+export default UnlockedRoute;

@@ -12,6 +12,7 @@ import useEditPasswordMutation from "@/api/password/edit-password";
 import { decryptUserData, encryptUserData } from "@/utils/EncryptDecrypt";
 import useGetSinglePasswordQuery from "@/api/password/get-single-password";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import useGeneratePassword from "@/hooks/useGeneratePassword";
 
 interface EditPasswordProps {
   open: boolean;
@@ -22,6 +23,7 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useEditPasswordMutation(id);
   const { data: passwordData } = useGetSinglePasswordQuery(id);
+  const { generatePassword, password } = useGeneratePassword();
   useEffect(() => {
     if (!passwordData?.data || !encryptionKey) return;
 
@@ -55,6 +57,7 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
       username: "",
       password: "",
     },
+
     // validationSchema: createValidationSchema({
     //   email: requiredFieldValidation({
     //     errorMessage: "Enter your email",
@@ -85,69 +88,75 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
     },
   });
 
+  useEffect(() => {
+    formik.setFieldValue("password", password);
+  }, [password]);
+
   return (
-    <>
-      <DialogContent>
-        <DialogDescription>
-          <ModalHeader
-            subText="Enter the necessary information to create a new password and save"
-            title="Edit Password"
-          />
-          <form onSubmit={formik.handleSubmit}>
-            <div className="mt-6 flex flex-col space-y-3">
-              <Input
-                label="Website/App name"
-                name="websiteName"
-                value={formik.values.websiteName}
-                placeholder="Website/App name"
-                onChange={formik.handleChange}
-              />
-              <Input
-                label="Website/URL(optional)"
-                placeholder="Enter Username"
-                name="websiteUrl"
-                value={formik.values.websiteUrl}
-                onChange={formik.handleChange}
-              />
-              <Input
-                label="Username/Email address"
-                placeholder="Enter Username"
-                value={formik.values.username}
-                name="username"
-                onChange={formik.handleChange}
-              />
-              <Input
-                type="password"
-                label="Password"
-                placeholder="Enter Username"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-              />
+    <DialogContent>
+      <DialogDescription>
+        <ModalHeader
+          subText="Enter the necessary information to create a new password and save"
+          title="Edit Password"
+        />
+        <form onSubmit={formik.handleSubmit}>
+          <div className="mt-6 flex flex-col space-y-3">
+            <Input
+              label="Website/App name"
+              name="websiteName"
+              value={formik.values.websiteName}
+              placeholder="Website/App name"
+              onChange={formik.handleChange}
+            />
+            <Input
+              label="Website/URL(optional)"
+              placeholder="Enter Username"
+              name="websiteUrl"
+              value={formik.values.websiteUrl}
+              onChange={formik.handleChange}
+            />
+            <Input
+              label="Username/Email address"
+              placeholder="Enter Username"
+              value={formik.values.username}
+              name="username"
+              onChange={formik.handleChange}
+            />
+            <Input
+              type="password"
+              label="Password"
+              placeholder="Enter Username"
+              name="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+            />
 
-              <Button className=" bg-[#9CCDFF66] text-primary-500 flex items-center justify-center gap-[6px]">
-                <Sparkles />
-                Generate Automatically
-              </Button>
+            <Button
+              type="button"
+              onClick={() => generatePassword()}
+              className=" bg-[#9CCDFF66] text-primary-500 flex items-center justify-center gap-[6px]"
+            >
+              <Sparkles />
+              Generate Automatically
+            </Button>
 
-              <div className="h-1 w-full bg-primary-500" />
-            </div>
-            <div className="flex items-center gap-3 mt-[33px]">
-              <Button
-                type="button"
-                onClick={() => setOpen(false)}
-                variant="tertiary"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="primary">
-                Update
-              </Button>
-            </div>
-          </form>
-        </DialogDescription>
-      </DialogContent>
-    </>
+            <div className="h-1 w-full bg-primary-500" />
+          </div>
+          <div className="flex items-center gap-3 mt-[33px]">
+            <Button
+              type="button"
+              onClick={() => setOpen(false)}
+              variant="tertiary"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary">
+              Update
+            </Button>
+          </div>
+        </form>
+      </DialogDescription>
+    </DialogContent>
   );
 };
 

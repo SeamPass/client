@@ -1,5 +1,9 @@
 import useAddWifiMutation from "@/api/wifi/add-wifi";
-import { DialogContent, DialogDescription } from "@/components/ui/dialog";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogOverlay,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
@@ -48,14 +52,18 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
         success,
         message: message,
         onSuccessCallback: () => {
-          setOpen(false);
+          setOpen(!open);
+          formik.resetForm();
         },
       });
     },
   });
 
   return (
-    <>
+    <DialogOverlay
+      onClick={() => formik.resetForm()}
+      className=" bg-transparent"
+    >
       <DialogContent>
         <DialogDescription>
           <ModalHeader
@@ -89,7 +97,7 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
           </form>
         </DialogDescription>
       </DialogContent>
-    </>
+    </DialogOverlay>
   );
 };
 

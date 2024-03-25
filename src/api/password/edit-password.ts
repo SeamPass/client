@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import axiosInstance from "@/config/axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface IAddPasswordProps {
   websiteName: string;
@@ -25,8 +25,12 @@ const useEditPasswordMutation = (id: string) => {
     }
   };
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: handleEditPassword,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["password"] });
+    },
     onError: () => {
       console.log("error");
     },

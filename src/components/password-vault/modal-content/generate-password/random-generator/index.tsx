@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import CustomGeneratePassword from "../custom/CustomGeneratePassword";
 import copyToClipboard from "@/utils/copy-to-clipboard";
 import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import GeneratorModal from "../modal/generator-modal";
 
 // Define types for your options
 type OptionType = {
@@ -22,6 +24,7 @@ interface RandomGeneratorProps {
 }
 
 const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
+  const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState<number[]>([38]);
   const [passwordStrength, setPasswordStrength] = useState<string>("");
   const [strengthColor, setStrengthColor] = useState<string>("");
@@ -163,9 +166,18 @@ const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
         >
           Copy only
         </Text>
-        <Text size="xs" className="text-primary-500 cursor-pointer">
-          Copy & Save
-        </Text>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger onClick={() => copyToClipboard(password)} asChild>
+            <Text size="xs" className="text-primary-500 cursor-pointer">
+              Copy & Save
+            </Text>
+          </DialogTrigger>
+          <GeneratorModal
+            open={open}
+            onOpenChange={setOpen}
+            password={password}
+          />
+        </Dialog>
       </div>
       <Text variant="primary" className="text-[16px] mt-[10px]">
         Password Length

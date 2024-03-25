@@ -6,7 +6,7 @@ import ModalHeader from "@/shared/modal-header";
 import { useFormik } from "formik";
 import Sparkles from "@/assets/icons/sparkles.svg?react";
 import useAddUserPasswordMutation from "@/api/password/add-password";
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { GlobalContext } from "@/context/globalContext";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
@@ -27,7 +27,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       websiteName: "",
       websiteUrl: "",
       username: "",
-      password: "" || password,
+      password: "",
     },
     validate: (values) => {
       const errors: { websiteUrl?: string } = {};
@@ -64,7 +64,8 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
         success,
         message: message,
         onSuccessCallback() {
-          setOpen(false);
+          setOpen(!open);
+          formik.resetForm();
         },
       });
     },
@@ -75,7 +76,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
   }, [password]);
 
   return (
-    <>
+    <React.Fragment>
       <DialogContent>
         <DialogDescription>
           <ModalHeader
@@ -149,7 +150,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
           </form>
         </DialogDescription>
       </DialogContent>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import axiosInstance from "@/config/axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface IAddSecretProps {
   title: string;
@@ -22,8 +22,12 @@ const useAddSecretMutation = () => {
     }
   };
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: handleAddSecret,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["secret"] });
+    },
     onError: () => {
       console.log("error");
     },

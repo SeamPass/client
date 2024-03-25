@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import axiosInstance from "@/config/axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface IAddWifiProps {
   wifiName: string;
@@ -22,8 +22,12 @@ const useAddWifiMutation = () => {
     }
   };
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: handleAddWifi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wifi"] });
+    },
     onError: () => {
       console.log("error");
     },

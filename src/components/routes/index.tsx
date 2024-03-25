@@ -16,6 +16,7 @@ import SecretNotes from "@/pages/secret-notes";
 import WifiDetails from "@/pages/wifi-details";
 import Locked from "@/pages/locked";
 import LockedRoute from "./locked-routes";
+import UnlockedRoute from "./unlocked-routes";
 
 const AllRoutes = () => {
   return (
@@ -34,15 +35,19 @@ const AllRoutes = () => {
           <Route path="/enter-otp" element={<EnterOtp />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
         </Route>
-        <Route element={<LockedRoute />}>
-          <Route path="/locked" element={<Locked />} />
-        </Route>
+
         <Route element={<ProtectedRoutes />}>
-          <Route path="/password-vault" element={<Password />} />
-          <Route path="/secret-notes" element={<SecretNotes />} />
-          <Route path="/wifi-details" element={<WifiDetails />} />
-          <Route path="/security" element={<Security />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route element={<UnlockedRoute />}>
+            <Route path="/locked" element={<Locked />} />
+          </Route>
+          <Route element={<LockedRoute />}>
+            <Route path="/secret-notes" element={<SecretNotes />} />
+            <Route path="/wifi-details" element={<WifiDetails />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/profile" element={<Profile />} />
+
+            <Route path="/password-vault" element={<Password />} />
+          </Route>
         </Route>
       </Routes>
     </>
