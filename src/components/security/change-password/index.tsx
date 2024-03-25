@@ -9,11 +9,23 @@ import {
 } from "@/helpers/validation-schemas";
 import ErrorProgressBar from "@/shared/components/error-progress-bar";
 import { useState } from "react";
+import { checkValidation } from "@/helpers/checkProgressValidation";
+import useChangePasswordMutation from "@/api/user/chnage-password";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
+import { deriveKey } from "@/utils/keyUtils";
+import { generateSalt, hashPassword } from "@/utils/hashPassword";
+import { decryptUserData, encryptUserData } from "@/utils/EncryptDecrypt";
+import useUpdateEncryptionKeyMutation from "@/api/encryptionKey/update-keys";
+import useGetUserQuery from "@/api/user/get-user";
+
 const ChangePassword = () => {
   const [progress, setProgress] = useState(0);
   const passwordMessage = "Enter new password";
   const { passwordValidation, matchFieldValidation } = schemaValidation;
-
+  const { mutateAsync } = useChangePasswordMutation();
+  const { mutateAsync: updateKeys } = useUpdateEncryptionKeyMutation();
+  const { data: userData } = useGetUserQuery();
+  console.log(userData);
   const formik = useFormik({
     initialValues: {
       currentPassword: "",
@@ -36,39 +48,66 @@ const ChangePassword = () => {
         },
       }),
     }),
-    validate: (values) => {
-      const errors = { password: "" };
-      if (!values.password) {
-        errors.password = passwordMessage;
-      } else if (values.password.length < 8) {
-        errors.password = "Password must be at least 8 characters long.";
-        setProgress(1);
-      } else if (!/[A-Z]/.test(values.password)) {
-        errors.password =
-          "Password must contain at least one uppercase letter.";
-        setProgress(2);
-      } else if (!/[a-z]/.test(values.password)) {
-        errors.password =
-          "Password must contain at least one lowercase letter.";
-        setProgress(3);
-      } else if (!/[0-9]/.test(values.password)) {
-        errors.password = "Password must contain at least one number.";
-        setProgress(4);
-      } else if (!/[^A-Za-z0-9]/.test(values.password)) {
-        errors.password =
-          "Password must contain at least one special character.";
-        setProgress(5);
-      } else {
-        // If none of the above errors are found, keep the password error empty to indicate it's valid
-        errors.password = "Awesome ,you have a strong password";
-        setProgress(6);
+    validate: (values) =>
+      checkValidation({ values, setProgress, passwordMessage }),
+
+    onSubmit: async (values) => {
+      const hashedPassword = await hashPassword(
+        values.currentPassword,
+        userData?.user?.clientSalt
+      );
+      console.log(userData?.clientSalt);
+      console.log(values.currentPassword);
+      console.log(hashedPassword);
+      const newSalt = generateSalt();
+      const newHashedPassword = await hashPassword(values.password, newSalt);
+      console.log(newHashedPassword);
+      try {
+        const response = await mutateAsync({
+          oldPassword: hashedPassword,
+          newPassword: newHashedPassword,
+          confirmNewPassword: newHashedPassword,
+          newSalt,
+        });
+        const { success, message } = response;
+        console.log(response);
+        apiMessageHelper({
+          success,
+          message,
+          onSuccessCallback: async () => {
+            const sgek = await deriveKey(values.currentPassword, response.ps);
+            const newSalt = generateSalt();
+            const newSgek = await deriveKey(values.password, newSalt);
+            const decryptMasterKey = await decryptUserData(
+              response.mk,
+              response.iv,
+              sgek
+            );
+
+            console.log("decryptMasterKey", decryptMasterKey);
+            const encryptKey = await encryptUserData(decryptMasterKey, newSgek);
+            console.log(
+              "cipher:",
+              encryptKey.ciphertextBase64,
+              "iv:",
+              encryptKey.ivBase64
+            );
+            if (
+              encryptKey?.ciphertextBase64 &&
+              encryptKey?.ivBase64 &&
+              newSalt
+            ) {
+              await updateKeys({
+                mk: encryptKey?.ciphertextBase64,
+                iv: encryptKey?.ivBase64,
+                newSalt,
+              });
+            }
+          },
+        });
+      } catch (err) {
+        console.log(err);
       }
-
-      return errors;
-    },
-
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
     },
   });
   return (
@@ -120,8 +159,19 @@ const ChangePassword = () => {
             }
           />
           {formik.errors.password !== passwordMessage && (
-            <ErrorProgressBar progress={progress} />
+            <div className="w-full mt-[11px]">
+              {" "}
+              <ErrorProgressBar progress={progress} />
+            </div>
           )}
+          <p className="mt-1">
+            {progress === 5 ? (
+              <p className="">Awesome, you have a strong password</p>
+            ) : (
+              formik.errors.password !== passwordMessage &&
+              formik.errors.password
+            )}
+          </p>
         </div>
 
         <div>

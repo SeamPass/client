@@ -12,6 +12,7 @@ interface Enable2StepProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   data: any;
 }
+
 const Enable2Step: FC<Enable2StepProps> = ({ setOpen, data }) => {
   const { otp, setOtp, error, setError } = useOtpValidation();
   const { mutateAsync: verify2FA } = useVerifyCodeMutation();

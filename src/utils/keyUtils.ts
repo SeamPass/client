@@ -1,5 +1,3 @@
-import { hexStringToArrayBuffer } from "./cryptoUtils";
-
 export async function deriveKey(
   password: string,
   salt: string
@@ -16,7 +14,7 @@ export async function deriveKey(
     {
       name: "PBKDF2",
       salt: encoder.encode(salt),
-      iterations: 100000,
+      iterations: 310000,
       hash: "SHA-256",
     },
     keyMaterial,
@@ -24,12 +22,4 @@ export async function deriveKey(
     false,
     ["encrypt", "decrypt"]
   );
-}
-
-export async function importAESKeyFromHex(hexKey: string): Promise<CryptoKey> {
-  const keyBuffer = hexStringToArrayBuffer(hexKey);
-  return window.crypto.subtle.importKey("raw", keyBuffer, "AES-CBC", false, [
-    "encrypt",
-    "decrypt",
-  ]);
 }

@@ -82,7 +82,7 @@ const PasswordTable = () => {
   const tableData = decryptedData?.map((item: IGetSecretProps) => ({
     ...item,
     [tableHeaders[0]]: (
-      <div className="flex md:items-center justify-start md:justify-center gap-2">
+      <div className="flex md:items-center md:justify-center  gap-2">
         <Checkbox
           onCheckedChange={() => handleCheckboxChange(item.id)}
           indicatorStyle="size-3"

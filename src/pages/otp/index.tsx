@@ -9,7 +9,8 @@ import Text from "@/shared/components/typography";
 import Header from "@/shared/components/typography/Header";
 import AuthLayout from "@/shared/layouts/auth-layout";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
-import { deriveKey, importAESKeyFromHex } from "@/utils/keyUtils";
+import { importKeyFromBase64 } from "@/utils/generateKey";
+import { deriveKey } from "@/utils/keyUtils";
 import { useContext, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -36,6 +37,7 @@ const EnterOtp = () => {
         verificationCode: otp,
         email,
       });
+
       console.log(response);
       const { message, success, accessToken, expiresIn } = response;
       apiMessageHelper({
@@ -48,20 +50,15 @@ const EnterOtp = () => {
           sessionStorage.setItem("expiresIn", adjustedExpiresIn.toString());
 
           //decryption taking place here
-          const encryptionSalt = response?.userInfo?.ps;
-          const encryptedSGEKBase64 = response?.sgek;
+          const encryptionSalt = response?.salt;
+          const mk = response?.mk;
           const ivBase64 = response?.iv;
 
-          const udek = await deriveKey(password, encryptionSalt);
+          const sgek = await deriveKey(password, encryptionSalt);
           try {
-            const decryptedSGEK = await decryptUserData(
-              encryptedSGEKBase64,
-              ivBase64,
-              udek
-            );
-
-            const sgek = await importAESKeyFromHex(decryptedSGEK);
-            setEncryptionKey && setEncryptionKey(sgek);
+            const decryptedSGEK = await decryptUserData(mk, ivBase64, sgek);
+            const importMk = await importKeyFromBase64(decryptedSGEK);
+            setEncryptionKey && setEncryptionKey(importMk);
           } catch (error) {
             console.error("Decryption of SGEK failed:", error);
           }

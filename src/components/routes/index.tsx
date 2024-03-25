@@ -14,6 +14,8 @@ import Profile from "@/pages/profile";
 import VerifyEmail from "@/pages/verify-email";
 import SecretNotes from "@/pages/secret-notes";
 import WifiDetails from "@/pages/wifi-details";
+import Locked from "@/pages/locked";
+import LockedRoute from "./locked-routes";
 
 const AllRoutes = () => {
   return (
@@ -32,7 +34,9 @@ const AllRoutes = () => {
           <Route path="/enter-otp" element={<EnterOtp />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
         </Route>
-
+        <Route element={<LockedRoute />}>
+          <Route path="/locked" element={<Locked />} />
+        </Route>
         <Route element={<ProtectedRoutes />}>
           <Route path="/password-vault" element={<Password />} />
           <Route path="/secret-notes" element={<SecretNotes />} />

@@ -6,10 +6,11 @@ import ModalHeader from "@/shared/modal-header";
 import { useFormik } from "formik";
 import Sparkles from "@/assets/icons/sparkles.svg?react";
 import useAddUserPasswordMutation from "@/api/password/add-password";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "@/context/globalContext";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import useGeneratePassword from "@/hooks/useGeneratePassword";
 
 interface AddPasswordProps {
   open: boolean;
@@ -19,13 +20,14 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
   // const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddUserPasswordMutation();
+  const { generatePassword, password } = useGeneratePassword();
 
   const formik = useFormik({
     initialValues: {
       websiteName: "",
       websiteUrl: "",
       username: "",
-      password: "",
+      password: "" || password,
     },
     validate: (values) => {
       const errors: { websiteUrl?: string } = {};
@@ -67,6 +69,10 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       });
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue("password", password);
+  }, [password]);
 
   return (
     <>
@@ -117,7 +123,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 value={formik.values.password}
               />
 
-              <Button className=" bg-[#9CCDFF66] text-primary-500 flex items-center justify-center gap-[6px]">
+              <Button
+                type="button"
+                onClick={() => generatePassword()}
+                className=" bg-[#9CCDFF66] text-primary-500 flex items-center justify-center gap-[6px]"
+              >
                 <Sparkles />
                 Generate Automatically
               </Button>

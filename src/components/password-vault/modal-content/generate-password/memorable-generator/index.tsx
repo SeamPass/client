@@ -70,7 +70,7 @@ const MemorableGenerator = () => {
         newPassword.push(word);
       }
     }
-    setPassword(newPassword.join(" "));
+    setPassword(newPassword.join("-"));
   };
 
   useEffect(() => {

@@ -88,7 +88,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
 
       <ComponentVisibility appear={tableData?.length > 0}>
         <div className="w-full  md:overflow-x-auto pb-[32px] lg:pb-[78px]  ">
-          <div className=" md:w-[1200px] lg:w-full">
+          <div className=" sm:w-[1200px] lg:w-full">
             <div
               className={cn(
                 "  w-full rounded-[8px] overflow-hidden border border-grey-200  ",
@@ -141,8 +141,6 @@ const TableComponent: React.FC<TableComponentProps> = ({
                           </td>
                         </tr>
                       </ComponentVisibility>
-
-                      {/* Assuming you want to keep the TableDropdown only visible on larger screens or have specific logic for it */}
                     </React.Fragment>
                   ))}
                 </tbody>

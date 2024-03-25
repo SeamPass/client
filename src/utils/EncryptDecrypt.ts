@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { arrayBufferToBase64, base64ToArrayBuffer } from "./cryptoUtils";
 
 export async function encryptUserData(
-  data: string,
+  data: any,
   key: CryptoKey
 ): Promise<{ ciphertextBase64: string; ivBase64: string }> {
   const iv = window.crypto.getRandomValues(new Uint8Array(16));
@@ -19,15 +20,21 @@ export async function encryptUserData(
 
 export async function decryptUserData(
   encryptedData: string,
-  iv: string,
+  ivBase64: string,
   key: CryptoKey
 ): Promise<string> {
-  const ivArrayBuffer = base64ToArrayBuffer(iv);
-  const dataBuffer = base64ToArrayBuffer(encryptedData);
-  const decrypted = await window.crypto.subtle.decrypt(
-    { name: "AES-CBC", iv: ivArrayBuffer },
-    key,
-    dataBuffer
-  );
-  return new TextDecoder().decode(decrypted);
+  const iv = base64ToArrayBuffer(ivBase64);
+  const data = base64ToArrayBuffer(encryptedData);
+
+  try {
+    const decrypted = await window.crypto.subtle.decrypt(
+      { name: "AES-CBC", iv },
+      key,
+      data
+    );
+    return new TextDecoder().decode(decrypted);
+  } catch (error) {
+    console.error("Decryption failed:", error);
+    throw new Error("Decryption failed");
+  }
 }

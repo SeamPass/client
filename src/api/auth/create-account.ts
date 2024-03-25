@@ -5,11 +5,13 @@ import axiosInstance from "@/config/axios";
 interface UserPayload {
   email: string;
   nickname: string;
-  password: string;
+  hashedPassword: string;
+  clientSalt: string;
 }
 
 const useCreateAccountMutation = () => {
   const handleCreateAccount = async (userDetails: UserPayload) => {
+    console.log(userDetails);
     try {
       const { data } = await axiosInstance.post<UserPayload>(
         "/register-user",

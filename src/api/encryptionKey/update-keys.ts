@@ -3,20 +3,22 @@
 import axiosInstance from "@/config/axios";
 import { useMutation } from "@tanstack/react-query";
 
-export interface IStoreKeyProps {
-  userId: string | undefined;
+export interface IUpdateKeyProps {
   mk: string;
   iv: string;
-  salt: string;
+  newSalt: string;
 }
 
-const useEncryptionKeyMutation = () => {
-  const handleEncryptionKey = async (encryptionData: IStoreKeyProps) => {
+const useUpdateEncryptionKeyMutation = () => {
+  const handleUpdateEncryptionKey = async (encryptionData: IUpdateKeyProps) => {
+    console.log(encryptionData);
     try {
-      const { data } = await axiosInstance.post<IStoreKeyProps>(
-        `/store-sgek`,
+      const { data } = await axiosInstance.patch<IUpdateKeyProps>(
+        `/update-keys`,
         encryptionData
       );
+
+      console.log(data);
 
       return data;
     } catch (err: any) {
@@ -25,7 +27,7 @@ const useEncryptionKeyMutation = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: handleEncryptionKey,
+    mutationFn: handleUpdateEncryptionKey,
     onError: () => {
       console.log("error");
     },
@@ -34,4 +36,4 @@ const useEncryptionKeyMutation = () => {
   return mutation;
 };
 
-export default useEncryptionKeyMutation;
+export default useUpdateEncryptionKeyMutation;
