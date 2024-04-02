@@ -1,7 +1,7 @@
 // type Props = {}
 import logo from "@/assets/logo.png";
 import avatar from "@/assets/avatar.png";
-import NotificationIcon from "@/assets/icons/notification.svg?react";
+// import NotificationIcon from "@/assets/icons/notification.svg?react";
 import ArrowDownIcon from "@/assets/icons/arrow-down.svg?react";
 import {
   DropdownMenu,
@@ -22,10 +22,10 @@ const ExtendedNav = () => {
         <img className="" src={logo} alt="logo" />
       </div>
       <div className="flex items-center gap-6">
-        <div className="w-[44px] h-[44px] cursor-pointer rounded-full bg-white flex justify-center items-center">
+        {/* <div className="w-[44px] h-[44px] cursor-pointer rounded-full bg-white flex justify-center items-center">
           <NotificationIcon />
-        </div>
-        <div className="w-[1px] h-[34.5px] bg-grey-100" />
+        </div> */}
+        {/* <div className="w-[1px] h-[34.5px] bg-grey-100" /> */}
 
         {/* avatar */}
         <div className="flex items-center gap-3">

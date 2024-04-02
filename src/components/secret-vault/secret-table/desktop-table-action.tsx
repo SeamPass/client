@@ -38,10 +38,10 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
 
   return (
     <div className=" h-full flex justify-center items-center relative">
-      <div className="hidden lg:block">
+      <div className="hidden sm:block">
         <Popover>
           <PopoverTrigger>
-            <MoreVerticalIcon className="text-[#141B34] hidden md:block cursor-pointer" />
+            <MoreVerticalIcon className="text-[#141B34] hidden sm:block cursor-pointer" />
           </PopoverTrigger>
           <ActionPopover actions={updatedAction} />
         </Popover>
@@ -51,7 +51,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
         onClick={() =>
           setShowMobileTable((prev: string | null) => (prev === id ? null : id))
         }
-        className="text-[#141B34] cursor-pointer lg:hidden"
+        className="text-[#141B34] cursor-pointer sm:hidden"
       />
 
       {updatedAction?.map(({ Component, ...item }) => (

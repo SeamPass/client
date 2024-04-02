@@ -25,7 +25,7 @@ const ChangePassword = () => {
   const { mutateAsync } = useChangePasswordMutation();
   const { mutateAsync: updateKeys } = useUpdateEncryptionKeyMutation();
   const { data: userData } = useGetUserQuery();
-  console.log(userData);
+
   const formik = useFormik({
     initialValues: {
       currentPassword: "",

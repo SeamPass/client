@@ -2,7 +2,7 @@
 import { arrayBufferToBase64, base64ToArrayBuffer } from "./cryptoUtils";
 
 export async function encryptUserData(
-  data: any,
+  data: string | undefined,
   key: CryptoKey
 ): Promise<{ ciphertextBase64: string; ivBase64: string }> {
   const iv = window.crypto.getRandomValues(new Uint8Array(16));

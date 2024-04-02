@@ -25,7 +25,9 @@ import { decryptUserData } from "@/utils/EncryptDecrypt";
 const PasswordTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
-  const [isTableDataSelected, setIsTableDataSelected] = useState<string[]>([]);
+  const [isTableDataSelected, setIsTableDataSelected] = useState<
+    IGetPasswordProps[]
+  >([]);
   const [showMobileTable, setShowMobileTable] = useState<string | null>(null);
   const [pageCount, setPageCount] = useState(1);
   const { data } = useGetUserPasswordQuery(pageCount);
@@ -35,7 +37,6 @@ const PasswordTable = () => {
     [key: string]: boolean;
   }>({});
   const [decryptedData, setDecryptedData] = useState<any>([]);
-
   const tableHeaders = [
     "Website name",
     "Username/Email",
@@ -73,13 +74,17 @@ const PasswordTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
-  const handleCheckboxChange = (itemId: string) => {
-    setIsTableDataSelected((prevState: string[]) => {
-      const isAlreadySelected = prevState.includes(itemId);
+  const handleCheckboxChange = (item: IGetPasswordProps) => {
+    setIsTableDataSelected((prevState: IGetPasswordProps[]) => {
+      const isAlreadySelected = prevState.find(
+        (data: IGetPasswordProps) => data?.id === item?.id
+      );
       if (isAlreadySelected) {
-        return prevState.filter((id: string) => id !== itemId);
+        return prevState.filter(
+          (data: IGetPasswordProps) => data?.id !== item?.id
+        );
       } else {
-        return [...prevState, itemId];
+        return [...prevState, item];
       }
     });
   };
@@ -109,10 +114,10 @@ const PasswordTable = () => {
     [tableHeaders[0]]: (
       <div className="flex md:items-center justify-start md:justify-center gap-2">
         <Checkbox
-          onCheckedChange={() => handleCheckboxChange(item.id)}
+          onCheckedChange={() => handleCheckboxChange(item)}
           indicatorStyle="size-3"
           className=" size-[16px]"
-          checked={isTableDataSelected.includes(item.id)}
+          checked={!!isTableDataSelected.find((data) => data?.id === item?.id)}
         />
         <Text size="sm" variant="primary" weight="regular">
           {item.websiteName}
@@ -121,7 +126,7 @@ const PasswordTable = () => {
     ),
     [tableHeaders[1]]: item.username,
     [tableHeaders[2]]: (
-      <div className="flex items-center justify-center space-x-[10px]">
+      <div className="flex  items-center justify-center space-x-[10px]">
         <span>{passwordVisibility[item.id] ? item.password : "*****"}</span>
         <div className="flex items-center ">
           <ViewIcon

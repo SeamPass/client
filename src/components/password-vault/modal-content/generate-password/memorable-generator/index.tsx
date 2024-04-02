@@ -7,13 +7,14 @@ import copyToClipboard from "@/utils/copy-to-clipboard";
 import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import GeneratorModal from "../modal/generator-modal";
+import PasswordStrengthCriteria from "@/shared/components/password-strength-criteria";
 
 const MemorableGenerator = () => {
   const [open, setOpen] = useState(false);
   const [wordList, setWordList] = useState<string[]>([]);
   const [customOptions, setCustomOptions] = useState([
     { text: "Use number", isTrue: false },
-    { text: "Use special characters", isTrue: false },
+    { text: "Use characters", isTrue: false },
     { text: "Use Uppercase", isTrue: false },
   ]);
   const [password, setPassword] = useState<string>("");
@@ -51,7 +52,7 @@ const MemorableGenerator = () => {
     }
     if (
       customOptions.find(
-        (option) => option.text === "Use special characters" && option.isTrue
+        (option) => option.text === "Use characters" && option.isTrue
       )
     ) {
       const specialChars = "!@#$%^&*";
@@ -150,24 +151,8 @@ const MemorableGenerator = () => {
           />
         </Dialog>
       </div>
-      {/* <Text variant="primary" className="text-[16px] mt-[10px]">
-        Password Length
-      </Text> */}
 
-      {/* <div className=" flex items-center  mt-4 ">
-        <Slider
-          max={100}
-          step={1}
-          onValueChange={(value) => {
-            setPasswordLength(value);
-            setMemorableProgress([...Array(value).keys()]);
-          }}
-          className={cn("w-[100%]")}
-        />
-        <Text size="normal" variant="primary" className="pl-4 ">
-          {passwordLength}
-        </Text>
-      </div> */}
+      <PasswordStrengthCriteria />
 
       <div>
         <Input

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IGetPasswordProps } from "@/api/password/get-password";
 import { Dialog } from "@/components/ui/dialog";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import ActionPopover from "@/shared/components/action-popover";
@@ -12,7 +13,9 @@ interface DesktopTableActionProps<T> {
     name: string;
     Component: (props: T) => ReactNode;
   }[];
-  setIsTableDataSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  setIsTableDataSelected: React.Dispatch<
+    React.SetStateAction<IGetPasswordProps[]>
+  >;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

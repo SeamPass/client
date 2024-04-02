@@ -57,7 +57,7 @@ const Login = () => {
       });
 
       const { success, accessToken, message, expiresIn } = response;
-      console.log(response);
+
       apiMessageHelper({
         success,
         message: message ?? "Login Successful",

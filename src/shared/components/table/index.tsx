@@ -9,14 +9,13 @@ import Empty from "../empty";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../button";
 import DeleteModal from "../modal/delete-modal";
-import { IGetPasswordProps } from "@/api/password/get-password";
 
 interface TableComponentProps {
   tableHeaders: string[];
   tableData: { [key: string]: any };
   showMobileTable: string | null;
-  isTableDataSelected: string[];
-  setIsTableDataSelected: React.Dispatch<React.SetStateAction<string[] | []>>;
+  isTableDataSelected: any;
+  setIsTableDataSelected: React.Dispatch<React.SetStateAction<any>>;
   hasNextPage: boolean;
   hasPrevPage: boolean;
   totalPages: number;
@@ -49,9 +48,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
       tableHeaders[tableHeaders.length - 1],
     ].includes(item);
 
-  const itemsToDelete = isTableDataSelected.map((id) =>
-    tableData?.find((item: IGetPasswordProps) => item?.id === id)
-  );
+  const itemsToDelete = isTableDataSelected;
 
   return (
     <>
@@ -87,7 +84,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
       </ComponentVisibility>
 
       <ComponentVisibility appear={tableData?.length > 0}>
-        <div className="w-full  md:overflow-x-auto pb-[32px] lg:pb-[78px]  ">
+        <div className="w-full  sm:overflow-x-auto pb-[32px] lg:pb-[78px]  ">
           <div className=" sm:w-[1200px] lg:w-full">
             <div
               className={cn(

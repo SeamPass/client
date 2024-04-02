@@ -8,6 +8,7 @@ import copyToClipboard from "@/utils/copy-to-clipboard";
 import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import GeneratorModal from "../modal/generator-modal";
+import PasswordStrengthCriteria from "@/shared/components/password-strength-criteria";
 
 // Define types for your options
 type OptionType = {
@@ -25,14 +26,14 @@ interface RandomGeneratorProps {
 
 const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
   const [open, setOpen] = useState(false);
-  const [progress, setProgress] = useState<number[]>([38]);
+  const [progress, setProgress] = useState<number[]>([52]);
   const [passwordStrength, setPasswordStrength] = useState<string>("");
   const [strengthColor, setStrengthColor] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [options, setOptions] = useState<OptionType>({
     "Use number": true,
     "Use letter": false,
-    "Use special characters": false,
+    "Use characters": false,
     "Use capitals": false,
   });
 
@@ -69,7 +70,7 @@ const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
     if (options["Use number"]) {
       availableOptions.push("number");
     }
-    if (options["Use special characters"]) {
+    if (options["Use characters"]) {
       availableOptions.push("special");
     }
 
@@ -134,6 +135,7 @@ const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
   useEffect(() => {
     handleShowPasswordStrength();
   }, [password]);
+
   return (
     <div>
       <div className="flex items-center justify-between border border-grey-200  rounded-[16px] h-[75px] overflow-hidden mt-3">
@@ -179,6 +181,9 @@ const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
           />
         </Dialog>
       </div>
+
+      <PasswordStrengthCriteria />
+
       <Text variant="primary" className="text-[16px] mt-[10px]">
         Password Length
       </Text>
