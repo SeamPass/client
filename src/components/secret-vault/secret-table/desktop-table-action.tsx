@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { IGetSecretProps } from "@/api/secret/get-secret";
 import { Dialog } from "@/components/ui/dialog";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import ActionPopover from "@/shared/components/action-popover";
@@ -5,20 +7,21 @@ import { MoreHorizontalCircle01Icon, MoreVerticalIcon } from "hugeicons-react";
 import { ReactNode, useState } from "react";
 
 interface DesktopTableActionProps<T> {
-  id: string;
+  item: IGetSecretProps;
   setShowMobileTable: React.Dispatch<React.SetStateAction<string | null>>;
   actions: {
     name: string;
     Component: (props: T) => ReactNode;
   }[];
   setIsTableDataSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  handleDelete: (id: any) => Promise<void>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
-  id,
+  item,
   setShowMobileTable,
   actions,
+  handleDelete,
 }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [openView, setOpenView] = useState(false);
@@ -29,13 +32,13 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
     { open: openView, action: setOpenView },
     { open: openDelete, action: setOpenDelete },
   ];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const updatedAction = actions.map((item: any, index: number) => ({
     ...item,
     open: actionState[index].open,
     action: actionState[index].action,
   }));
-
+  const data = item;
   return (
     <div className=" h-full flex justify-center items-center relative">
       <div className="hidden sm:block">
@@ -49,14 +52,21 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
 
       <MoreHorizontalCircle01Icon
         onClick={() =>
-          setShowMobileTable((prev: string | null) => (prev === id ? null : id))
+          setShowMobileTable((prev: string | null) =>
+            prev === data?.id ? null : data?.id
+          )
         }
         className="text-[#141B34] cursor-pointer sm:hidden"
       />
 
       {updatedAction?.map(({ Component, ...item }) => (
         <Dialog open={item.open} onOpenChange={item.action}>
-          <Component id={id} open={item.open} setOpen={item.action} />
+          <Component
+            data={data}
+            open={item.open}
+            setOpen={item.action}
+            handleDelete={handleDelete}
+          />
         </Dialog>
       ))}
     </div>

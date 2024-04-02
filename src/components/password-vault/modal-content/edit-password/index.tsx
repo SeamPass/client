@@ -13,17 +13,21 @@ import { decryptUserData, encryptUserData } from "@/utils/EncryptDecrypt";
 import useGetSinglePasswordQuery from "@/api/password/get-single-password";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
 import useGeneratePassword from "@/hooks/useGeneratePassword";
+import { IGetPasswordProps } from "@/api/password/get-password";
+import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
 
 interface EditPasswordProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
-  id: string;
+  data: IGetPasswordProps;
 }
-const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
+const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useEditPasswordMutation(id);
-  const { data: passwordData } = useGetSinglePasswordQuery(id);
+  const { mutateAsync } = useEditPasswordMutation(data?.id);
+  const { data: passwordData } = useGetSinglePasswordQuery(data?.id);
   const { generatePassword, password } = useGeneratePassword();
+  const { handleShowPasswordStrength } = usePasswordStrengthMeter();
+
   useEffect(() => {
     if (!passwordData?.data || !encryptionKey) return;
 
@@ -69,11 +73,14 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
       const { ciphertextBase64: encryptedPassword, ivBase64: ivPassword } =
         await encryptUserData(values.password, encryptionKey);
 
+      const passwordStrength = handleShowPasswordStrength(values.password);
+
       const response = await mutateAsync({
         websiteName: values.websiteName,
         websiteUrl: values.websiteUrl,
         username: { encUsername: encryptedUsername, iv: ivUsername },
         password: { encPassword: encryptedPassword, iv: ivPassword },
+        passwordStrength: passwordStrength.strengthMessage,
       });
 
       const { success, message } = response;

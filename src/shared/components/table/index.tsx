@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React from "react";
 import Text from "../typography";
 import { cn } from "@/lib/utils";
 import Pagination from "../pagination";
@@ -25,6 +25,9 @@ interface TableComponentProps {
     handlePaginate: () => void
   ) => void;
   setPageCount: React.Dispatch<React.SetStateAction<number>>;
+  handleDelete: (id: any) => Promise<void>;
+  open: boolean;
+  setOpen: React.Dispatch<boolean>;
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({
@@ -39,8 +42,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
   currentPage,
   handlePageCount,
   setPageCount,
+  handleDelete,
+  open,
+  setOpen,
 }) => {
-  const [open, setOpen] = useState(false);
   const isVisibleOnMobile = (item: string) =>
     [
       tableHeaders[0],
@@ -66,6 +71,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                 deleteData={itemsToDelete}
                 open={open}
                 setOpen={setOpen}
+                handleDelete={handleDelete}
               />
             </Dialog>
 

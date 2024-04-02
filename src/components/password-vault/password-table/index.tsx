@@ -21,6 +21,9 @@ import { handlePasswordStrengthColors } from "@/utils/passwordStrengthColors";
 import DeleteModal from "@/shared/components/modal/delete-modal";
 import { GlobalContext } from "@/context/globalContext";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
+import usePasswordDeleteMutation from "@/api/password/delete-password";
+import useDeleteMultiplePasswordMutation from "@/api/password/delete-multiple-password";
 
 const PasswordTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
@@ -37,6 +40,10 @@ const PasswordTable = () => {
     [key: string]: boolean;
   }>({});
   const [decryptedData, setDecryptedData] = useState<any>([]);
+  const { mutateAsync } = usePasswordDeleteMutation();
+  const { mutateAsync: deleteMultiple } = useDeleteMultiplePasswordMutation();
+  const [openModal, setOpenModal] = useState(false);
+
   const tableHeaders = [
     "Website name",
     "Username/Email",
@@ -74,6 +81,8 @@ const PasswordTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
+  console.log(decryptedData);
+
   const handleCheckboxChange = (item: IGetPasswordProps) => {
     setIsTableDataSelected((prevState: IGetPasswordProps[]) => {
       const isAlreadySelected = prevState.find(
@@ -108,6 +117,23 @@ const PasswordTable = () => {
 
     { name: "delete", Component: DeleteModal },
   ];
+
+  const handleDelete = async (id: any) => {
+    const response =
+      isTableDataSelected.length > 0
+        ? await deleteMultiple({ passwordIds: id })
+        : await mutateAsync(id);
+    const { message, success } = response;
+    console.log(success);
+    apiMessageHelper({
+      message,
+      success,
+      onSuccessCallback: () => {
+        setIsTableDataSelected([]);
+        setOpenModal(!openModal);
+      },
+    });
+  };
 
   const tableData = decryptedData?.map((item: IGetPasswordProps) => ({
     ...item,
@@ -161,19 +187,22 @@ const PasswordTable = () => {
       </span>
     ),
     [tableHeaders[5]]: (
-      <DesktopTableAction
-        id={item.id}
-        setShowMobileTable={setShowMobileTable}
-        actions={actions}
-        setIsTableDataSelected={setIsTableDataSelected}
-      />
+      <>
+        <DesktopTableAction
+          item={item}
+          setShowMobileTable={setShowMobileTable}
+          actions={actions}
+          setIsTableDataSelected={setIsTableDataSelected}
+          handleDelete={handleDelete}
+        />
+      </>
     ),
     MobileTable: (
       <MobileTableAction
         item={item}
-        id={item.id}
         tableHeaders={tableHeaders}
         actions={actions}
+        handleDelete={handleDelete}
       />
     ),
   }));
@@ -206,6 +235,9 @@ const PasswordTable = () => {
         currentPage={currentPage}
         handlePageCount={handlePageCount}
         setPageCount={setPageCount}
+        handleDelete={handleDelete}
+        open={openModal}
+        setOpen={setOpenModal}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import useEditWifiMutation from "@/api/wifi/edit-wifi";
 import useGetSingleWifiQuery from "@/api/wifi/get-single-wifi";
+import { IGetWifiProps } from "@/api/wifi/get-wifi";
 import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
@@ -13,13 +14,13 @@ import { FC, useContext, useEffect } from "react";
 interface EditWifiProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
-  id: string;
+  data: IGetWifiProps;
 }
 
-const EditWifi: FC<EditWifiProps> = ({ setOpen, id }) => {
+const EditWifi: FC<EditWifiProps> = ({ setOpen, data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useEditWifiMutation(id);
-  const { data: wifiData } = useGetSingleWifiQuery(id);
+  const { mutateAsync } = useEditWifiMutation(data?.id);
+  const { data: wifiData } = useGetSingleWifiQuery(data?.id);
 
   useEffect(() => {
     if (!wifiData?.data || !encryptionKey) return;

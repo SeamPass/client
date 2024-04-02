@@ -17,19 +17,21 @@ import useGetSinglePasswordQuery from "@/api/password/get-single-password";
 import { GlobalContext } from "@/context/globalContext";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
 import copyToClipboard from "@/utils/copy-to-clipboard";
+import { IGetPasswordProps } from "@/api/password/get-password";
 
 interface ViewPasswordProps {
   open: boolean;
   setOpen: () => void;
-  id: string;
+  data: IGetPasswordProps;
 }
 
-const ViewPassword: FC<ViewPasswordProps> = ({ id }) => {
+const ViewPassword: FC<ViewPasswordProps> = ({ data }) => {
   const { encryptionKey } = useContext(GlobalContext);
   const { requiredFieldValidation } = schemaValidation;
   const [progress, setProgress] = useState(0);
   const passwordMessage = "Enter master password";
-  const { data: passwordData } = useGetSinglePasswordQuery(id);
+  const { data: passwordData } = useGetSinglePasswordQuery(data?.id);
+
   useEffect(() => {
     if (!passwordData?.data || !encryptionKey) return;
 

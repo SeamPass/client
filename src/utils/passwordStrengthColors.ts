@@ -1,16 +1,18 @@
+import { colors } from "./colors";
+
 export const handlePasswordStrengthColors = (strength: string) => {
   switch (strength) {
     case "weak":
-      return "#989B13";
+      return colors.weak;
       break;
     case "medium":
-      return "#989B13";
+      return colors.medium;
       break;
     case "strong":
-      return "#4CAF50";
+      return colors.strong;
       break;
     case "compromised":
-      return "#BE2921";
+      return colors.compromised;
       break;
     default:
       return "";

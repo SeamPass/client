@@ -10,7 +10,6 @@ export interface IAddSecretProps {
 
 const useEditSecretMutation = (id: string) => {
   const handleEditSecret = async (userSecretInfo: IAddSecretProps) => {
-    console.log(userSecretInfo);
     try {
       const { data } = await axiosInstance.put<IAddSecretProps>(
         `/update-secret/${id}`,

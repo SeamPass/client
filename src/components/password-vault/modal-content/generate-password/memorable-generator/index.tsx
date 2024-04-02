@@ -87,14 +87,12 @@ const MemorableGenerator = () => {
   };
 
   // show strength of passwords
-  const { handleShowPasswordStrength } = usePasswordStrengthMeter(
-    password,
-    setPasswordStrength,
-    setStrengthColor
-  );
+  const { handleShowPasswordStrength } = usePasswordStrengthMeter();
 
   useEffect(() => {
-    handleShowPasswordStrength();
+    const result = handleShowPasswordStrength(password);
+    setPasswordStrength(result.strengthMessage);
+    setStrengthColor(result.color);
   }, [password]);
 
   const handlePasswordLengthChange = (

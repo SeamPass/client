@@ -10,6 +10,7 @@ export interface IAddPasswordProps {
   password: string;
   usernameIv: string;
   passwordIv: string;
+  passwordStrength: string;
 }
 
 const useAddUserPasswordMutation = () => {

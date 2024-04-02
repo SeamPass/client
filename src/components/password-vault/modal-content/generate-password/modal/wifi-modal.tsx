@@ -2,6 +2,10 @@ import useAddWifiMutation from "@/api/wifi/add-wifi";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
 import { Button } from "@/shared/components/button";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import { useFormik } from "formik";
@@ -18,12 +22,22 @@ const WifiModal = ({
 }) => {
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddWifiMutation();
+  const { requiredFieldValidation } = schemaValidation;
 
   const formik = useFormik({
     initialValues: {
       wifiName: "",
       wifiPassword: "",
     },
+
+    validationSchema: createValidationSchema({
+      wifiName: requiredFieldValidation({
+        errorMessage: "Enter your wifi name",
+      }),
+      wifiPassword: requiredFieldValidation({
+        errorMessage: "Enter your wifi password",
+      }),
+    }),
 
     onSubmit: async (values) => {
       const {

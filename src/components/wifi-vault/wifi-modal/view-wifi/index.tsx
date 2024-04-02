@@ -1,4 +1,5 @@
 import useGetSingleWifiQuery from "@/api/wifi/get-single-wifi";
+import { IGetWifiProps } from "@/api/wifi/get-wifi";
 import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
@@ -10,12 +11,12 @@ import { FC, useContext, useEffect } from "react";
 interface ViewWifiProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
-  id: string;
+  data: IGetWifiProps;
 }
 
-const ViewWifi: FC<ViewWifiProps> = ({ id }) => {
+const ViewWifi: FC<ViewWifiProps> = ({ data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { data: wifiData } = useGetSingleWifiQuery(id);
+  const { data: wifiData } = useGetSingleWifiQuery(data?.id);
 
   useEffect(() => {
     if (!wifiData?.data || !encryptionKey) return;

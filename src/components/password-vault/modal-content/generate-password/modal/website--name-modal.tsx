@@ -2,6 +2,11 @@ import useAddUserPasswordMutation from "@/api/password/add-password";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
+import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
 import { Button } from "@/shared/components/button";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import { useFormik } from "formik";
@@ -16,8 +21,10 @@ const WebsiteNameModal = ({
   onOpenChange: React.Dispatch<boolean>;
   password: string;
 }) => {
+  const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddUserPasswordMutation();
+  const { handleShowPasswordStrength } = usePasswordStrengthMeter();
 
   const formik = useFormik({
     initialValues: {
@@ -26,6 +33,17 @@ const WebsiteNameModal = ({
       websiteName: "",
       websiteUrl: "",
     },
+    validationSchema: createValidationSchema({
+      websiteName: requiredFieldValidation({
+        errorMessage: "Enter website name",
+      }),
+      username: requiredFieldValidation({
+        errorMessage: "Enter username",
+      }),
+      password: requiredFieldValidation({
+        errorMessage: "Enter password",
+      }),
+    }),
     validate: (values) => {
       const errors: { websiteUrl?: string } = {};
       const urlRegex =
@@ -45,7 +63,7 @@ const WebsiteNameModal = ({
         ciphertextBase64: encryptedPassword,
         ivBase64: ivPasswordBase64,
       } = await encryptUserData(values.password, encryptionKey);
-
+      const passwordStrength = handleShowPasswordStrength(values.password);
       const response = await mutateAsync({
         websiteName: values.websiteName,
         websiteUrl: values.websiteUrl,
@@ -53,6 +71,7 @@ const WebsiteNameModal = ({
         usernameIv: ivUsernameBase64,
         password: encryptedPassword,
         passwordIv: ivPasswordBase64,
+        passwordStrength: passwordStrength.strengthMessage,
       });
 
       const { success, message } = response;

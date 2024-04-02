@@ -19,6 +19,9 @@ import useGetWifiQuery, { IGetWifiProps } from "@/api/wifi/get-wifi";
 import EditWifi from "../wifi-modal/edit-wifi/edit-wifi";
 import { convertDate } from "@/utils/convertDateFormat";
 import copyToClipboard from "@/utils/copy-to-clipboard";
+import useWifiDeleteMutation from "@/api/wifi/delete-wifi";
+import useDeleteMultipleWifiMutation from "@/api/wifi/delete-multiple-wifi";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 const WifiTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
@@ -30,6 +33,9 @@ const WifiTable = () => {
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [decryptedData, setDecryptedData] = useState<any>([]);
+  const { mutateAsync } = useWifiDeleteMutation();
+  const { mutateAsync: deleteMultiple } = useDeleteMultipleWifiMutation();
+  const [openModal, setOpenModal] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState<{
     [key: string]: boolean;
   }>({});
@@ -60,13 +66,15 @@ const WifiTable = () => {
 
   console.log(decryptedData);
 
-  const handleCheckboxChange = (itemId: string) => {
-    setIsTableDataSelected((prevState: string[]) => {
-      const isAlreadySelected = prevState.includes(itemId);
+  const handleCheckboxChange = (item: IGetWifiProps) => {
+    setIsTableDataSelected((prevState: any) => {
+      const isAlreadySelected = prevState.find(
+        (data: IGetWifiProps) => data?.id === item?.id
+      );
       if (isAlreadySelected) {
-        return prevState.filter((id: string) => id !== itemId);
+        return prevState.filter((data: IGetWifiProps) => data?.id !== item?.id);
       } else {
-        return [...prevState, itemId];
+        return [...prevState, item];
       }
     });
   };
@@ -76,6 +84,22 @@ const WifiTable = () => {
       ...prevState,
       [itemId]: !prevState[itemId],
     }));
+  };
+
+  const handleDelete = async (id: any) => {
+    const response =
+      isTableDataSelected.length > 0
+        ? await deleteMultiple({ wifiIds: id })
+        : await mutateAsync(id);
+    const { message, success } = response;
+    apiMessageHelper({
+      message,
+      success,
+      onSuccessCallback: () => {
+        setOpenModal(!openModal);
+        setIsTableDataSelected([]);
+      },
+    });
   };
 
   const actions = [
@@ -96,10 +120,12 @@ const WifiTable = () => {
     [tableHeaders[0]]: (
       <div className="flex md:items-center justify-start md:justify-center gap-2">
         <Checkbox
-          onCheckedChange={() => handleCheckboxChange(item.id)}
+          onCheckedChange={() => handleCheckboxChange(item)}
           indicatorStyle="size-3"
           className=" size-[16px]"
-          checked={isTableDataSelected.includes(item.id)}
+          checked={
+            !!isTableDataSelected.find((data: any) => data.id === item.id)
+          }
         />
         <Text size="sm" variant="primary" weight="regular">
           {item.wifiName}
@@ -124,18 +150,19 @@ const WifiTable = () => {
     [tableHeaders[2]]: convertDate(item.createdAt),
     [tableHeaders[3]]: (
       <DesktopTableAction
-        id={item.id}
+        item={item}
         setShowMobileTable={setShowMobileTable}
         actions={actions}
         setIsTableDataSelected={setIsTableDataSelected}
+        handleDelete={handleDelete}
       />
     ),
     MobileTable: (
       <MobileTableAction
         item={item}
-        id={item.id}
         tableHeaders={tableHeaders}
         actions={actions}
+        handleDelete={handleDelete}
       />
     ),
   }));
@@ -168,6 +195,9 @@ const WifiTable = () => {
         currentPage={currentPage}
         handlePageCount={handlePageCount}
         setPageCount={setPageCount}
+        handleDelete={handleDelete}
+        open={openModal}
+        setOpen={setOpenModal}
       />
     </div>
   );

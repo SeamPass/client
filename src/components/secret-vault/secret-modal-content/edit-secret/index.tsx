@@ -12,17 +12,17 @@ import { GlobalContext } from "@/context/globalContext";
 import useEditSecretMutation from "@/api/secret/edit-secret";
 import useGetSingleSecretQuery from "@/api/secret/get-single-secret";
 import { Textarea } from "@/components/ui/textarea";
+import { IGetSecretProps } from "@/api/secret/get-secret";
 
 interface EditPasswordProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
-  id: string;
+  data: IGetSecretProps;
 }
-const EditSecret: React.FC<EditPasswordProps> = ({ setOpen, id }) => {
+const EditSecret: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useEditSecretMutation(id);
-  const { data: secretData } = useGetSingleSecretQuery(id);
-  console.log(secretData);
+  const { mutateAsync } = useEditSecretMutation(data?.id);
+  const { data: secretData } = useGetSingleSecretQuery(data?.id);
 
   useEffect(() => {
     if (!secretData?.data || !encryptionKey) return;

@@ -11,17 +11,22 @@ import { GlobalContext } from "@/context/globalContext";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
 import useGeneratePassword from "@/hooks/useGeneratePassword";
+import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
 
 interface AddPasswordProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }
 const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
-  // const { requiredFieldValidation } = schemaValidation;
+  const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddUserPasswordMutation();
   const { generatePassword, password } = useGeneratePassword();
-
+  const { handleShowPasswordStrength } = usePasswordStrengthMeter();
   const formik = useFormik({
     initialValues: {
       websiteName: "",
@@ -29,6 +34,17 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       username: "",
       password: "",
     },
+    validationSchema: createValidationSchema({
+      websiteName: requiredFieldValidation({
+        errorMessage: "Enter website name",
+      }),
+      username: requiredFieldValidation({
+        errorMessage: "Enter username",
+      }),
+      password: requiredFieldValidation({
+        errorMessage: "Enter password",
+      }),
+    }),
     validate: (values) => {
       const errors: { websiteUrl?: string } = {};
       const urlRegex =
@@ -49,6 +65,8 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
         ivBase64: ivPasswordBase64,
       } = await encryptUserData(values.password, encryptionKey);
 
+      const passwordStrength = handleShowPasswordStrength(values.password);
+
       const response = await mutateAsync({
         websiteName: values.websiteName,
         websiteUrl: values.websiteUrl,
@@ -56,6 +74,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
         usernameIv: ivUsernameBase64,
         password: encryptedPassword,
         passwordIv: ivPasswordBase64,
+        passwordStrength: passwordStrength.strengthMessage,
       });
 
       const { success, message } = response;
@@ -92,6 +111,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Enter Username"
                 onChange={formik.handleChange}
                 value={formik.values.websiteName}
+                error={formik.errors.websiteName}
               />
               <Input
                 type="text"
@@ -100,11 +120,6 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="https://example.com"
                 onChange={formik.handleChange}
                 value={formik.values.websiteUrl}
-                error={
-                  formik.touched.websiteUrl && formik.errors.websiteUrl
-                    ? formik.errors.websiteUrl
-                    : ""
-                }
               />
 
               <Input
@@ -114,6 +129,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Username/Email address"
                 onChange={formik.handleChange}
                 value={formik.values.username}
+                error={formik.errors.username}
               />
               <Input
                 type="password"
@@ -122,6 +138,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Enter password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
+                error={formik.errors.password}
               />
 
               <Button

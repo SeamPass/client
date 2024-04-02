@@ -1,3 +1,4 @@
+import { IGetSecretProps } from "@/api/secret/get-secret";
 import useGetSingleSecretQuery from "@/api/secret/get-single-secret";
 import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { GlobalContext } from "@/context/globalContext";
@@ -11,13 +12,12 @@ import { FC, useContext, useEffect } from "react";
 interface ViewSecretProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
-  id: string;
+  data: IGetSecretProps;
 }
 
-const ViewSecret: FC<ViewSecretProps> = ({ id }) => {
+const ViewSecret: FC<ViewSecretProps> = ({ data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { data: secretData } = useGetSingleSecretQuery(id);
-  console.log(id);
+  const { data: secretData } = useGetSingleSecretQuery(data?.id);
   useEffect(() => {
     if (!secretData?.data || !encryptionKey) return;
 

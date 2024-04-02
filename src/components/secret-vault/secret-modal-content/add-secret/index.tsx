@@ -10,12 +10,17 @@ import { GlobalContext } from "@/context/globalContext";
 import useAddSecretMutation from "@/api/secret/add-secret";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
 
 interface AddSecretProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }
 const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
+  const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddSecretMutation();
 
@@ -24,11 +29,14 @@ const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
       title: "",
       note: "",
     },
-    // validationSchema: createValidationSchema({
-    //   email: requiredFieldValidation({
-    //     errorMessage: "Enter your email",
-    //   }),
-    // }),
+    validationSchema: createValidationSchema({
+      title: requiredFieldValidation({
+        errorMessage: "Enter your secret title",
+      }),
+      note: requiredFieldValidation({
+        errorMessage: "Enter your secret note",
+      }),
+    }),
     onSubmit: async (values) => {
       const { ciphertextBase64: encryptedNote, ivBase64: ivNoteBase64 } =
         await encryptUserData(values.note, encryptionKey);
@@ -69,6 +77,7 @@ const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
             name="title"
             onChange={formik.handleChange}
             value={formik.values.title}
+            error={formik.errors.title}
           />
           <Textarea
             label="Type your note here"
@@ -76,6 +85,7 @@ const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
             name="note"
             onChange={formik.handleChange}
             value={formik.values.note}
+            error={formik.errors.note}
           />
 
           <Button type="submit" variant="primary">

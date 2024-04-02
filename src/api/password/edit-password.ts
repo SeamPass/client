@@ -8,11 +8,11 @@ export interface IAddPasswordProps {
   websiteUrl: string;
   username: { encUsername: string; iv: string };
   password: { encPassword: string; iv: string };
+  passwordStrength: string;
 }
 
-const useEditPasswordMutation = (id: string) => {
+const useEditPasswordMutation = (id: string | undefined) => {
   const handleEditPassword = async (userPasswordInfo: IAddPasswordProps) => {
-    console.log(userPasswordInfo);
     try {
       const { data } = await axiosInstance.put<IAddPasswordProps>(
         `/update-password/${id}`,

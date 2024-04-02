@@ -3,6 +3,10 @@ import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
 import { Button } from "@/shared/components/button";
 import ModalHeader from "@/shared/modal-header";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
@@ -17,17 +21,21 @@ interface AddWifiProps {
 const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddWifiMutation();
+  const { requiredFieldValidation } = schemaValidation;
 
   const formik = useFormik({
     initialValues: {
       wifiNAme: "",
       wifiPassword: "",
     },
-    // validationSchema: createValidationSchema({
-    //   email: requiredFieldValidation({
-    //     errorMessage: "Enter your email",
-    //   }),
-    // }),
+    validationSchema: createValidationSchema({
+      wifiNAme: requiredFieldValidation({
+        errorMessage: "Enter your wifi name",
+      }),
+      wifiPassword: requiredFieldValidation({
+        errorMessage: "Enter your wifi password",
+      }),
+    }),
     onSubmit: async (values) => {
       const {
         ciphertextBase64: encryptedWifiPassword,
@@ -73,6 +81,7 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
             name="wifiNAme"
             onChange={formik.handleChange}
             value={formik.values.wifiNAme}
+            error={formik.errors.wifiNAme}
           />
           <Input
             type="password"
@@ -81,6 +90,7 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
             name="wifiPassword"
             onChange={formik.handleChange}
             value={formik.values.wifiPassword}
+            error={formik.errors.wifiPassword}
           />
 
           <Button type="submit" variant="primary">

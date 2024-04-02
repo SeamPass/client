@@ -10,14 +10,14 @@ interface MobileTableActionProps<T> {
     name: string;
     Component: (props: T) => ReactNode;
   }[];
-  id: string;
+  handleDelete: (id: any) => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MobileTableAction = ({
   item,
   actions,
-  id,
+  handleDelete,
 }: MobileTableActionProps<any>) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openView, setOpenView] = useState(false);
@@ -45,7 +45,8 @@ const MobileTableAction = ({
       item={tableData}
       tableHeaders={tableHeaders}
       actions={updatedAction}
-      id={id}
+      data={item}
+      handleDelete={handleDelete}
     />
   );
 };
