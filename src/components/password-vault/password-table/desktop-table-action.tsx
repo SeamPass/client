@@ -16,7 +16,7 @@ interface DesktopTableActionProps<T> {
   setIsTableDataSelected: React.Dispatch<
     React.SetStateAction<IGetPasswordProps[]>
   >;
-  handleDelete: (id: any) => Promise<void>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,19 +29,19 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
   handleDelete,
 }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
-  const [openView, setOpenView] = useState(false);
+  // const [openView, setOpenView] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
   const actionState = [
     { open: openEdit, action: setOpenEdit },
-    { open: openView, action: setOpenView },
+    // { open: openView, action: setOpenView },
     { open: openDelete, action: setOpenDelete },
   ];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updatedAction = actions.map((item: any, index: number) => ({
     ...item,
-    open: actionState[index].open,
-    action: actionState[index].action,
+    open: actionState[index]?.open,
+    action: actionState[index]?.action,
   }));
   const data = item;
   return (

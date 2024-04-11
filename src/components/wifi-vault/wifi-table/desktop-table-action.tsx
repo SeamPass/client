@@ -13,7 +13,7 @@ interface DesktopTableActionProps<T> {
     Component: (props: T) => ReactNode;
   }[];
   setIsTableDataSelected: React.Dispatch<React.SetStateAction<string[]>>;
-  handleDelete: (id: any) => Promise<void>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,7 +39,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
     action: actionState[index].action,
   }));
 
-  const dataToDelete = item;
+  const data = item;
   return (
     <div className=" h-full flex justify-center items-center relative">
       <div className="hidden sm:block">
@@ -54,7 +54,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
       <MoreHorizontalCircle01Icon
         onClick={() =>
           setShowMobileTable((prev: string | null) =>
-            prev === dataToDelete.id ? null : dataToDelete.id
+            prev === data.id ? null : data.id
           )
         }
         className="text-[#141B34] cursor-pointer sm:hidden"
@@ -63,7 +63,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
       {updatedAction?.map(({ Component, ...item }) => (
         <Dialog open={item.open} onOpenChange={item.action}>
           <Component
-            dataToDelete={dataToDelete}
+            data={data}
             open={item.open}
             setOpen={item.action}
             handleDelete={handleDelete}

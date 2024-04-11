@@ -10,7 +10,7 @@ interface DeleteModalProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
   deleteData: any[];
-  handleDelete?: (id: any) => Promise<void>;
+  handleDelete?: (id: any, callback: () => void) => Promise<void>;
   data?: any;
 }
 
@@ -22,7 +22,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
   handleDelete,
 }) => {
   const passwordIds = deleteData?.map((item) => item.id);
-
+  console.log(data);
   return (
     <DialogContent>
       <DialogDescription>
@@ -34,8 +34,8 @@ const DeleteModal: FC<DeleteModalProps> = ({
         />
         <ComponentVisibility appear={deleteData?.length > 0}>
           <div className="mt-7 space-y-6">
-            {deleteData?.map((item) => (
-              <div className="flex items-center gap-2">
+            {deleteData?.map((item, index) => (
+              <div key={index} className="flex items-center gap-2">
                 <img src={snapchat} alt="snapchat" />
                 <div>
                   <p>{item?.websiteName || item?.title || item?.wifiName}</p>
@@ -64,7 +64,10 @@ const DeleteModal: FC<DeleteModalProps> = ({
           </Button>
           <Button
             onClick={() =>
-              handleDelete && handleDelete(passwordIds || data?.id)
+              handleDelete &&
+              handleDelete(passwordIds || data?.id, () => {
+                setOpen(false);
+              })
             }
             variant="error"
           >

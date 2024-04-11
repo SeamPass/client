@@ -111,7 +111,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Enter Username"
                 onChange={formik.handleChange}
                 value={formik.values.websiteName}
-                error={formik.errors.websiteName}
+                error={
+                  formik.touched.websiteName && formik.errors.websiteName
+                    ? formik.errors.websiteName
+                    : ""
+                }
               />
               <Input
                 type="text"
@@ -120,6 +124,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="https://example.com"
                 onChange={formik.handleChange}
                 value={formik.values.websiteUrl}
+                error={
+                  formik.touched.websiteUrl && formik.errors.websiteUrl
+                    ? formik.errors.websiteUrl
+                    : ""
+                }
               />
 
               <Input
@@ -129,7 +138,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Username/Email address"
                 onChange={formik.handleChange}
                 value={formik.values.username}
-                error={formik.errors.username}
+                error={
+                  formik.touched.username && formik.errors.username
+                    ? formik.errors.username
+                    : ""
+                }
               />
               <Input
                 type="password"
@@ -138,7 +151,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Enter password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
-                error={formik.errors.password}
+                error={
+                  formik.touched.password && formik.errors.password
+                    ? formik.errors.password
+                    : ""
+                }
               />
 
               <Button

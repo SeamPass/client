@@ -10,7 +10,7 @@ interface MobileTableActionProps<T> {
     name: string;
     Component: (props: T) => ReactNode;
   }[];
-  handleDelete: (id: any) => Promise<void>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

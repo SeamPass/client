@@ -11,7 +11,7 @@ import {
 } from "@/helpers/validation-schemas";
 import { Button } from "@/shared/components/button";
 import useGetUserQuery from "@/api/user/get-user";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useUpdateUserMutation from "@/api/user/update-user";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
 
@@ -20,13 +20,8 @@ const ProfilePage = () => {
   const { data } = useGetUserQuery();
   const { mutateAsync: updateUser } = useUpdateUserMutation();
   const { emailValidation, requiredFieldValidation } = schemaValidation;
-
-  useEffect(() => {
-    formik.setValues({
-      email: data?.user?.email,
-      nickname: data?.user?.nickname,
-    });
-  }, [data?.user]);
+  const ref = useRef<HTMLInputElement | null>(null);
+  // const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -51,6 +46,20 @@ const ProfilePage = () => {
     },
   });
 
+  useEffect(() => {
+    formik.setValues({
+      email: data?.user?.email,
+      nickname: data?.user?.nickname,
+    });
+  }, [data?.user?.email, data?.user?.nickname]);
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      console.log(selectedFile);
+    }
+  };
+
   return (
     <div>
       <div
@@ -64,17 +73,27 @@ const ProfilePage = () => {
         My Profile
       </Header>
 
-      <div className="w-full flex flex-col shrink-0 md:flex-row md:space-x-10 lg:w-[754px] rounded-[16px] bg-white p-3 md:p-4 lg:p-10 mt-[17px]">
-        <div className="w-[50%] md:w-[25%] mx-auto md:mx-0 relative">
-          <img src={image} alt="profile" />
-          <span className="cursor-pointer absolute whitespace-nowrap text-[#F6FAFF] left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]">
+      <div className="w-full flex flex-col  md:flex-row md:space-x-10  lg:w-[754px] rounded-[16px] bg-white p-3 md:p-4 lg:p-10 mt-[17px]">
+        <div className="flex  flex-shrink-0 relative w-[200px] h-[200px] mx-auto ">
+          <img src={image} className=" object-cover" alt="profile " />
+          <p
+            onClick={() => ref?.current?.click()}
+            className="cursor-pointer my-auto font-normal   text-[#F6FAFF] underline absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] "
+          >
             Upload Image
-          </span>
+            <input
+              className="hidden"
+              type="file"
+              ref={ref}
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </p>
         </div>
         <div>
           <form
             onSubmit={formik.handleSubmit}
-            className="flex flex-col gap-y-[24px] mt-[24px] md:mt-0 lg:w-[443px]"
+            className="flex flex-col gap-y-[24px] mt-[24px] md:mt-0 w-full md:w-[443px]"
           >
             <div>
               <Input

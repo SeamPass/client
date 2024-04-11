@@ -25,7 +25,7 @@ interface TableComponentProps {
     handlePaginate: () => void
   ) => void;
   setPageCount: React.Dispatch<React.SetStateAction<number>>;
-  handleDelete: (id: any) => Promise<void>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }

@@ -12,7 +12,6 @@ import useGetUserPasswordQuery, {
 import { Checkbox } from "@/components/ui/checkbox";
 import Text from "@/shared/components/typography";
 import EditPassword from "../modal-content/edit-password";
-import ViewPassword from "../modal-content/view-password";
 import copyToClipboard from "@/utils/copy-to-clipboard";
 import DesktopTableAction from "./desktop-table-action";
 import MobileTableAction from "./mobile-table-action";
@@ -81,8 +80,6 @@ const PasswordTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
-  console.log(decryptedData);
-
   const handleCheckboxChange = (item: IGetPasswordProps) => {
     setIsTableDataSelected((prevState: IGetPasswordProps[]) => {
       const isAlreadySelected = prevState.find(
@@ -110,15 +107,15 @@ const PasswordTable = () => {
       name: "edit",
       Component: EditPassword,
     },
-    {
-      name: "view",
-      Component: ViewPassword,
-    },
+    // {
+    //   name: "view",
+    //   Component: ViewPassword,
+    // },
 
     { name: "delete", Component: DeleteModal },
   ];
 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id: any, callback: () => void) => {
     const response =
       isTableDataSelected.length > 0
         ? await deleteMultiple({ passwordIds: id })
@@ -130,7 +127,8 @@ const PasswordTable = () => {
       success,
       onSuccessCallback: () => {
         setIsTableDataSelected([]);
-        setOpenModal(!openModal);
+        //close
+        callback();
       },
     });
   };

@@ -89,7 +89,7 @@ const PasswordTable = () => {
     { name: "delete", Component: DeleteModal },
   ];
 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id: any, callback: () => void) => {
     const response =
       isTableDataSelected.length > 0
         ? await deleteMultiple({ secretIds: id })
@@ -100,6 +100,7 @@ const PasswordTable = () => {
       success,
       onSuccessCallback: () => {
         setIsTableDataSelected([]);
+        callback();
       },
     });
   };

@@ -13,7 +13,7 @@ interface TableDropdownProps<T> {
     action: () => void;
   }[];
 
-  handleDelete: (id: any) => Promise<void>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
   data: any;
 }
 

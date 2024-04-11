@@ -64,8 +64,6 @@ const WifiTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
-  console.log(decryptedData);
-
   const handleCheckboxChange = (item: IGetWifiProps) => {
     setIsTableDataSelected((prevState: any) => {
       const isAlreadySelected = prevState.find(
@@ -86,7 +84,8 @@ const WifiTable = () => {
     }));
   };
 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id: any, callback: () => void) => {
+    console.log(id);
     const response =
       isTableDataSelected.length > 0
         ? await deleteMultiple({ wifiIds: id })
@@ -96,8 +95,8 @@ const WifiTable = () => {
       message,
       success,
       onSuccessCallback: () => {
-        setOpenModal(!openModal);
         setIsTableDataSelected([]);
+        callback();
       },
     });
   };

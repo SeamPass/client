@@ -14,7 +14,7 @@ interface DesktopTableActionProps<T> {
     Component: (props: T) => ReactNode;
   }[];
   setIsTableDataSelected: React.Dispatch<React.SetStateAction<string[]>>;
-  handleDelete: (id: any) => Promise<void>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
 }
 
 const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({

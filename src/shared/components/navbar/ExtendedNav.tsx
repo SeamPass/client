@@ -12,9 +12,12 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useGetUserQuery from "@/api/user/get-user";
 
 const ExtendedNav = () => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const { data: userData } = useGetUserQuery();
+
   const navigate = useNavigate();
   return (
     <div className="md:flex   items-center hidden justify-between h-[114px]">
@@ -30,7 +33,9 @@ const ExtendedNav = () => {
         {/* avatar */}
         <div className="flex items-center gap-3">
           <img src={avatar} alt="avatar" />
-          <p>Sofiri A</p>
+          <p className=" capitalize text-[16px] lg:text-[18px] text-primary-100 ">
+            {userData?.user?.nickname}
+          </p>
 
           <DropdownMenu open={isOpenDropDown} onOpenChange={setIsOpenDropDown}>
             <DropdownMenuTrigger asChild>
