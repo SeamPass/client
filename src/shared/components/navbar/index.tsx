@@ -24,7 +24,7 @@ const navItems: NavItem = [
   {
     name: "stored items",
     icon: <FolderSecurityIcon className="size-5 md:size-6 text-grey-100" />,
-    href: "/stored-item",
+    href: "",
   },
   {
     name: "security",

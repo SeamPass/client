@@ -79,7 +79,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className=" w-[257px] shadow-none  border-[0.5px]  rounded-[4px] border-grey-200 bg-white mt-4 p-2 ">
                         <DropdownMenuItem
-                          onClick={() => navigate("/secret-notes")}
+                          onClick={() => {
+                            navigate("/secret-notes");
+                          }}
                           className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer"
                         >
                           Secret notes
@@ -141,9 +143,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
         >
           {navItems.map((item, index) => (
             <div key={index} className=" ">
-              <Link
-                to={`${index !== 1 && item.href}`}
-                onClick={() => index !== 1 && setIsOpen(!isOpen)}
+              <div
+                onClick={() => {
+                  index !== 1 && navigate(item.href);
+                  index !== 1 && setIsOpen(!isOpen);
+                }}
                 className=" w-full  flex items-center cursor-pointer "
               >
                 <span className="mr-[6px]">{item.icon}</span>
@@ -168,7 +172,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
                     </div>
                   )}
                 </Text>
-              </Link>
+              </div>
               <ComponentVisibility appear={isOpenMobileDropDown}>
                 {index === 1 && (
                   <ul className="text-[14px] mt-3 flex flex-col gap-y-3 ml-2">
@@ -176,6 +180,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
                       onClick={() => {
                         navigate("/secret-notes");
                         setIsOpen(!isOpen);
+                        setIsOpenMobileDropDown(!isOpenMobileDropDown);
                       }}
                       className=" cursor-pointer"
                     >
@@ -185,6 +190,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
                       onClick={() => {
                         navigate("/wifi-details");
                         setIsOpen(!isOpen);
+                        setIsOpenMobileDropDown(!isOpenMobileDropDown);
                       }}
                       className=" cursor-pointer"
                     >
