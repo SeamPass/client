@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
       return refreshAccessToken().then((newToken) => {
         axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-
+        sessionStorage.setItem("accessToken", JSON.stringify(newToken));
         return axios(originalRequest);
       });
     } else {

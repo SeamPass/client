@@ -1,4 +1,7 @@
-import { ArrowRight01Icon, ArrowLeft01Icon } from "hugeicons-react";
+import {
+  ArrowRight02Icon,
+  ArrowLeft02Icon,
+} from "hugeicons-react";
 
 interface PaginationProps {
   hasNextPage: boolean;
@@ -30,7 +33,7 @@ const Pagination: React.FC<PaginationProps> = ({
           }
           className="flex items-center cursor-pointer text-grey-100"
         >
-          <ArrowLeft01Icon className="size-6" />
+          <ArrowLeft02Icon className="size-6" />
         </p>
       </div>
 
@@ -49,7 +52,7 @@ const Pagination: React.FC<PaginationProps> = ({
           }
           className="flex items-center cursor-pointer text-grey-100"
         >
-          <ArrowRight01Icon className="size-6" />
+          <ArrowRight02Icon className="size-6" />
         </p>
       </div>
     </div>

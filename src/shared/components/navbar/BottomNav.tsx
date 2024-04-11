@@ -21,6 +21,7 @@ interface BottomNavProps {
 const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const [isOpenMobileDropDown, setIsOpenMobileDropDown] = useState(false);
   // const [searchParams, setSearchParams] = useSearchParams();
   // const appendParamToUrl = (key, value) => {
   //   const newSearchParams = new URLSearchParams(searchParams);
@@ -139,20 +140,59 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
           className="bg-white  fixed mx-auto space-y-7 p-4  rounded-[16px] shadow-[0px_49px_90px_0px_#6F6F6F40] lg:hidden "
         >
           {navItems.map((item, index) => (
-            <div
-              key={index}
-              className="w-full  flex items-center cursor-pointer  "
-            >
-              <span className="mr-[6px]">{item.icon}</span>
-
-              <Text
-                className="capitalize flex w-full justify-between"
-                variant="primary"
-                size="sm"
+            <div key={index} className=" ">
+              <Link
+                to={`${index !== 1 && item.href}`}
+                onClick={() => index !== 1 && setIsOpen(!isOpen)}
+                className=" w-full  flex items-center cursor-pointer "
               >
-                {item.name}
-                {index === 2 && <ArrowDown01Icon />}
-              </Text>
+                <span className="mr-[6px]">{item.icon}</span>
+                <Text
+                  onClick={() =>
+                    index === 1 &&
+                    setIsOpenMobileDropDown(!isOpenMobileDropDown)
+                  }
+                  className="capitalize flex w-full justify-between"
+                  variant="primary"
+                  size="normal"
+                >
+                  {item.name}
+                  {index === 1 && (
+                    <div
+                      className={cn(
+                        isOpenMobileDropDown ? "-rotate-180" : "rotate-0"
+                      )}
+                    >
+                      {" "}
+                      <ArrowDown01Icon />
+                    </div>
+                  )}
+                </Text>
+              </Link>
+              <ComponentVisibility appear={isOpenMobileDropDown}>
+                {index === 1 && (
+                  <ul className="text-[14px] mt-3 flex flex-col gap-y-3 ml-2">
+                    <li
+                      onClick={() => {
+                        navigate("/secret-notes");
+                        setIsOpen(!isOpen);
+                      }}
+                      className=" cursor-pointer"
+                    >
+                      Secret notes
+                    </li>
+                    <li
+                      onClick={() => {
+                        navigate("/wifi-details");
+                        setIsOpen(!isOpen);
+                      }}
+                      className=" cursor-pointer"
+                    >
+                      Wifi network
+                    </li>
+                  </ul>
+                )}
+              </ComponentVisibility>
             </div>
           ))}
         </div>

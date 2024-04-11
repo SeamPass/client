@@ -6,21 +6,27 @@ import ModalHeader from "@/shared/modal-header";
 import { useFormik } from "formik";
 import Sparkles from "@/assets/icons/sparkles.svg?react";
 import useAddUserPasswordMutation from "@/api/password/add-password";
-import { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { GlobalContext } from "@/context/globalContext";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import useGeneratePassword from "@/hooks/useGeneratePassword";
+import { usePasswordStrengthMeter } from "@/hooks/usePasswordMeter";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
 
 interface AddPasswordProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }
 const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
-  // const { requiredFieldValidation } = schemaValidation;
+  const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
-  console.log(encryptionKey);
   const { mutateAsync } = useAddUserPasswordMutation();
-
+  const { generatePassword, password } = useGeneratePassword();
+  const { handleShowPasswordStrength } = usePasswordStrengthMeter();
   const formik = useFormik({
     initialValues: {
       websiteName: "",
@@ -28,11 +34,26 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       username: "",
       password: "",
     },
-    // validationSchema: createValidationSchema({
-    //   email: requiredFieldValidation({
-    //     errorMessage: "Enter your email",
-    //   }),
-    // }),
+    validationSchema: createValidationSchema({
+      websiteName: requiredFieldValidation({
+        errorMessage: "Enter website name",
+      }),
+      username: requiredFieldValidation({
+        errorMessage: "Enter username",
+      }),
+      password: requiredFieldValidation({
+        errorMessage: "Enter password",
+      }),
+    }),
+    validate: (values) => {
+      const errors: { websiteUrl?: string } = {};
+      const urlRegex =
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+      if (!urlRegex.test(values?.websiteUrl)) {
+        errors.websiteUrl = "Invalid URL";
+      }
+      return errors;
+    },
     onSubmit: async (values) => {
       const {
         ciphertextBase64: encryptedUsername,
@@ -44,6 +65,8 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
         ivBase64: ivPasswordBase64,
       } = await encryptUserData(values.password, encryptionKey);
 
+      const passwordStrength = handleShowPasswordStrength(values.password);
+
       const response = await mutateAsync({
         websiteName: values.websiteName,
         websiteUrl: values.websiteUrl,
@@ -51,6 +74,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
         usernameIv: ivUsernameBase64,
         password: encryptedPassword,
         passwordIv: ivPasswordBase64,
+        passwordStrength: passwordStrength.strengthMessage,
       });
 
       const { success, message } = response;
@@ -58,14 +82,20 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
       apiMessageHelper({
         success,
         message: message,
+        onSuccessCallback() {
+          setOpen(!open);
+          formik.resetForm();
+        },
       });
     },
-
-    //   setOpen(false);
   });
 
+  useEffect(() => {
+    formik.setFieldValue("password", password);
+  }, [password]);
+
   return (
-    <>
+    <React.Fragment>
       <DialogContent>
         <DialogDescription>
           <ModalHeader
@@ -81,33 +111,58 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
                 placeholder="Enter Username"
                 onChange={formik.handleChange}
                 value={formik.values.websiteName}
+                error={
+                  formik.touched.websiteName && formik.errors.websiteName
+                    ? formik.errors.websiteName
+                    : ""
+                }
               />
               <Input
                 type="text"
                 name="websiteUrl"
                 label="Website/URL(optional)"
-                placeholder="Enter Username"
+                placeholder="https://example.com"
                 onChange={formik.handleChange}
                 value={formik.values.websiteUrl}
+                error={
+                  formik.touched.websiteUrl && formik.errors.websiteUrl
+                    ? formik.errors.websiteUrl
+                    : ""
+                }
               />
+
               <Input
                 type="text"
                 name="username"
                 label="Username/Email address"
-                placeholder="Enter Username"
+                placeholder="Username/Email address"
                 onChange={formik.handleChange}
                 value={formik.values.username}
+                error={
+                  formik.touched.username && formik.errors.username
+                    ? formik.errors.username
+                    : ""
+                }
               />
               <Input
                 type="password"
                 label="Password"
                 name="password"
-                placeholder="Enter Username"
+                placeholder="Enter password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
+                error={
+                  formik.touched.password && formik.errors.password
+                    ? formik.errors.password
+                    : ""
+                }
               />
 
-              <Button className=" bg-[#9CCDFF66] text-primary-500 flex items-center justify-center gap-[6px]">
+              <Button
+                type="button"
+                onClick={() => generatePassword()}
+                className=" bg-[#9CCDFF66] text-primary-500 flex items-center justify-center gap-[6px]"
+              >
                 <Sparkles />
                 Generate Automatically
               </Button>
@@ -115,7 +170,11 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
               <div className="h-1 w-full bg-primary-500" />
             </div>
             <div className="flex items-center gap-3 mt-[33px]">
-              <Button onClick={() => setOpen(false)} variant="tertiary">
+              <Button
+                type="button"
+                onClick={() => setOpen(false)}
+                variant="tertiary"
+              >
                 Cancel
               </Button>
               <Button type="submit" variant="primary">
@@ -125,7 +184,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
           </form>
         </DialogDescription>
       </DialogContent>
-    </>
+    </React.Fragment>
   );
 };
 

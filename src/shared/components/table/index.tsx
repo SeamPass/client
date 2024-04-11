@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React from "react";
 import Text from "../typography";
 import { cn } from "@/lib/utils";
 import Pagination from "../pagination";
@@ -9,14 +9,13 @@ import Empty from "../empty";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../button";
 import DeleteModal from "../modal/delete-modal";
-import { IGetPasswordProps } from "@/api/password/get-password";
 
 interface TableComponentProps {
   tableHeaders: string[];
   tableData: { [key: string]: any };
   showMobileTable: string | null;
-  isTableDataSelected: string[];
-  setIsTableDataSelected: React.Dispatch<React.SetStateAction<string[] | []>>;
+  isTableDataSelected: any;
+  setIsTableDataSelected: React.Dispatch<React.SetStateAction<any>>;
   hasNextPage: boolean;
   hasPrevPage: boolean;
   totalPages: number;
@@ -26,6 +25,9 @@ interface TableComponentProps {
     handlePaginate: () => void
   ) => void;
   setPageCount: React.Dispatch<React.SetStateAction<number>>;
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
+  open: boolean;
+  setOpen: React.Dispatch<boolean>;
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({
@@ -40,8 +42,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
   currentPage,
   handlePageCount,
   setPageCount,
+  handleDelete,
+  open,
+  setOpen,
 }) => {
-  const [open, setOpen] = useState(false);
   const isVisibleOnMobile = (item: string) =>
     [
       tableHeaders[0],
@@ -49,9 +53,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
       tableHeaders[tableHeaders.length - 1],
     ].includes(item);
 
-  const itemsToDelete = isTableDataSelected.map((id) =>
-    tableData?.find((item: IGetPasswordProps) => item?.id === id)
-  );
+  const itemsToDelete = isTableDataSelected;
 
   return (
     <>
@@ -69,6 +71,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                 deleteData={itemsToDelete}
                 open={open}
                 setOpen={setOpen}
+                handleDelete={handleDelete}
               />
             </Dialog>
 
@@ -87,8 +90,8 @@ const TableComponent: React.FC<TableComponentProps> = ({
       </ComponentVisibility>
 
       <ComponentVisibility appear={tableData?.length > 0}>
-        <div className="w-full  md:overflow-x-auto pb-[32px] lg:pb-[78px]  ">
-          <div className=" md:w-[1200px] lg:w-full">
+        <div className="w-full  sm:overflow-x-auto pb-[32px] lg:pb-[78px]  ">
+          <div className=" sm:w-[1200px] lg:w-full">
             <div
               className={cn(
                 "  w-full rounded-[8px] overflow-hidden border border-grey-200  ",
@@ -141,8 +144,6 @@ const TableComponent: React.FC<TableComponentProps> = ({
                           </td>
                         </tr>
                       </ComponentVisibility>
-
-                      {/* Assuming you want to keep the TableDropdown only visible on larger screens or have specific logic for it */}
                     </React.Fragment>
                   ))}
                 </tbody>

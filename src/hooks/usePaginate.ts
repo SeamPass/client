@@ -12,10 +12,10 @@ const usePaginate = (paginate: IPaginate) => {
     direction: "next" | "prev",
     handlePaginate: () => void
   ) => {
-    if (paginate.nextPage && direction === "next") {
-      handlePaginate();
+    if (paginate.hasNextPage && direction === "next") {
+      paginate?.hasNextPage && handlePaginate();
     } else {
-      handlePaginate();
+      paginate?.hasPreviousPage && handlePaginate();
     }
   };
 

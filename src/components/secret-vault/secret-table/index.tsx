@@ -17,6 +17,10 @@ import AddSecret from "../secret-modal-content/add-secret";
 import useGetSecretQuery, { IGetSecretProps } from "@/api/secret/get-secret";
 import { Checkbox } from "@/components/ui/checkbox";
 import Text from "@/shared/components/typography";
+import { convertDate } from "@/utils/convertDateFormat";
+import useSecretDeleteMutation from "@/api/secret/delete-secret";
+import useDeleteMultipleSecretMutation from "@/api/secret/delete-multiple-secret";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 const PasswordTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
@@ -28,6 +32,9 @@ const PasswordTable = () => {
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [decryptedData, setDecryptedData] = useState<any>([]);
+  const { mutateAsync } = useSecretDeleteMutation();
+  const { mutateAsync: deleteMultiple } = useDeleteMultipleSecretMutation();
+  const [openModal, setOpenModal] = useState(false);
 
   const tableHeaders = ["Title name", "Date created", "Last updated", "Action"];
   console.log(data);
@@ -54,13 +61,17 @@ const PasswordTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
-  const handleCheckboxChange = (itemId: string) => {
-    setIsTableDataSelected((prevState: string[]) => {
-      const isAlreadySelected = prevState.includes(itemId);
+  const handleCheckboxChange = (item: IGetSecretProps) => {
+    setIsTableDataSelected((prevState: any) => {
+      const isAlreadySelected = prevState.find(
+        (data: IGetSecretProps) => data?.id === item?.id
+      );
       if (isAlreadySelected) {
-        return prevState.filter((id: string) => id !== itemId);
+        return prevState.filter(
+          (data: IGetSecretProps) => data?.id !== item?.id
+        );
       } else {
-        return [...prevState, itemId];
+        return [...prevState, item];
       }
     });
   };
@@ -78,37 +89,56 @@ const PasswordTable = () => {
     { name: "delete", Component: DeleteModal },
   ];
 
+  const handleDelete = async (id: any, callback: () => void) => {
+    const response =
+      isTableDataSelected.length > 0
+        ? await deleteMultiple({ secretIds: id })
+        : await mutateAsync(id);
+    const { message, success } = response;
+    apiMessageHelper({
+      message,
+      success,
+      onSuccessCallback: () => {
+        setIsTableDataSelected([]);
+        callback();
+      },
+    });
+  };
+
   const tableData = decryptedData?.map((item: IGetSecretProps) => ({
     ...item,
     [tableHeaders[0]]: (
-      <div className="flex md:items-center justify-start md:justify-center gap-2">
+      <div className="flex md:items-center md:justify-center  gap-2">
         <Checkbox
-          onCheckedChange={() => handleCheckboxChange(item.id)}
+          onCheckedChange={() => handleCheckboxChange(item)}
           indicatorStyle="size-3"
           className=" size-[16px]"
-          checked={isTableDataSelected.includes(item.id)}
+          checked={
+            !!isTableDataSelected.find((data: any) => data?.id === item?.id)
+          }
         />
         <Text size="sm" variant="primary" weight="regular">
           {item.title}
         </Text>
       </div>
     ),
-    [tableHeaders[1]]: item.createdAt,
-    [tableHeaders[2]]: item.updatedAt,
+    [tableHeaders[1]]: convertDate(item.createdAt),
+    [tableHeaders[2]]: convertDate(item.updatedAt),
     [tableHeaders[3]]: (
       <DesktopTableAction
-        id={item.id}
+        item={item}
         setShowMobileTable={setShowMobileTable}
         actions={actions}
         setIsTableDataSelected={setIsTableDataSelected}
+        handleDelete={handleDelete}
       />
     ),
     MobileTable: (
       <MobileTableAction
         item={item}
-        id={item.id}
         tableHeaders={tableHeaders}
         actions={actions}
+        handleDelete={handleDelete}
       />
     ),
   }));
@@ -141,6 +171,9 @@ const PasswordTable = () => {
         currentPage={currentPage}
         handlePageCount={handlePageCount}
         setPageCount={setPageCount}
+        handleDelete={handleDelete}
+        open={openModal}
+        setOpen={setOpenModal}
       />
     </div>
   );

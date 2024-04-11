@@ -5,8 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 
 export interface IStoreKeyProps {
   userId: string | undefined;
-  sgek: string;
+  mk: string;
   iv: string;
+  salt: string;
 }
 
 const useEncryptionKeyMutation = () => {
@@ -16,8 +17,6 @@ const useEncryptionKeyMutation = () => {
         `/store-sgek`,
         encryptionData
       );
-
-      console.log(data);
 
       return data;
     } catch (err: any) {

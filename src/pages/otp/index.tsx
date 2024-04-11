@@ -1,3 +1,6 @@
+import useVerifyOtpMutation from "@/api/email-verification/verify-login-otp";
+import { GlobalContext } from "@/context/globalContext";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 import useOtpValidation from "@/hooks/useOtpValidation";
 import { Button } from "@/shared/components/button";
 import Logo from "@/shared/components/logo";
@@ -5,9 +8,64 @@ import Otp from "@/shared/components/otp-input";
 import Text from "@/shared/components/typography";
 import Header from "@/shared/components/typography/Header";
 import AuthLayout from "@/shared/layouts/auth-layout";
+import { decryptUserData } from "@/utils/EncryptDecrypt";
+import { importKeyFromBase64 } from "@/utils/generateKey";
+import { deriveKey } from "@/utils/keyUtils";
+import { useContext, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const EnterOtp = () => {
-  const { otp, setOtp, handleSubmit, error } = useOtpValidation();
+  const { otp, setOtp, error, setError } = useOtpValidation();
+  const navigate = useNavigate();
+  const { mutateAsync } = useVerifyOtpMutation();
+
+  const [searchParams] = useSearchParams();
+  const { handleLogin, setEncryptionKey, password } = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (!password || !email) return navigate("/login");
+  }, [password]);
+
+  const newSearchParams = new URLSearchParams(searchParams);
+  const email = newSearchParams.get("email");
+
+  const handleSubmit = async () => {
+    if (otp.length !== 6) {
+      setError("OTP must be 6 digits long");
+    } else {
+      const response = await mutateAsync({
+        verificationCode: otp,
+        email,
+      });
+
+      console.log(response);
+      const { message, success, accessToken, expiresIn } = response;
+      apiMessageHelper({
+        message,
+        success,
+        onSuccessCallback: async () => {
+          handleLogin && handleLogin(accessToken);
+          sessionStorage.setItem("accessToken", accessToken);
+          const adjustedExpiresIn = expiresIn - 60;
+          sessionStorage.setItem("expiresIn", adjustedExpiresIn.toString());
+
+          //decryption taking place here
+          const encryptionSalt = response?.salt;
+          const mk = response?.mk;
+          const ivBase64 = response?.iv;
+
+          const sgek = await deriveKey(password, encryptionSalt);
+          try {
+            const decryptedSGEK = await decryptUserData(mk, ivBase64, sgek);
+            const importMk = await importKeyFromBase64(decryptedSGEK);
+            setEncryptionKey && setEncryptionKey(importMk);
+          } catch (error) {
+            console.error("Decryption of SGEK failed:", error);
+          }
+        },
+      });
+    }
+  };
 
   return (
     <AuthLayout>
@@ -21,7 +79,7 @@ const EnterOtp = () => {
           email address
         </Text>
         <Text size="lg" variant="primary-50" weight="semibold" className="mt-3">
-          Sofiriamgbara@gmail.com
+          {email}
         </Text>
 
         <Otp otp={otp} setOtp={setOtp} error={error} />

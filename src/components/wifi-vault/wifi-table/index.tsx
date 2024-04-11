@@ -3,7 +3,7 @@ import TableComponent from "@/shared/components/table";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/shared/components/button";
 import DashboardHeader from "@/shared/components/dashboard-header";
-import { Add01Icon } from "hugeicons-react";
+import { Add01Icon, Copy01Icon, ViewIcon } from "hugeicons-react";
 import { useContext, useEffect, useState } from "react";
 import usePaginate from "@/hooks/usePaginate";
 import DeleteModal from "@/shared/components/modal/delete-modal";
@@ -11,12 +11,17 @@ import { GlobalContext } from "@/context/globalContext";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
 import { Checkbox } from "@/components/ui/checkbox";
 import Text from "@/shared/components/typography";
-import EditWifi from "../wifi-modal/edit-wifi";
 import ViewWifi from "../wifi-modal/view-wifi";
 import DesktopTableAction from "./desktop-table-action";
 import MobileTableAction from "./mobile-table-action";
 import AddWifi from "../wifi-modal/add-wifi";
 import useGetWifiQuery, { IGetWifiProps } from "@/api/wifi/get-wifi";
+import EditWifi from "../wifi-modal/edit-wifi/edit-wifi";
+import { convertDate } from "@/utils/convertDateFormat";
+import copyToClipboard from "@/utils/copy-to-clipboard";
+import useWifiDeleteMutation from "@/api/wifi/delete-wifi";
+import useDeleteMultipleWifiMutation from "@/api/wifi/delete-multiple-wifi";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 const WifiTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
@@ -28,7 +33,12 @@ const WifiTable = () => {
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [decryptedData, setDecryptedData] = useState<any>([]);
-
+  const { mutateAsync } = useWifiDeleteMutation();
+  const { mutateAsync: deleteMultiple } = useDeleteMultipleWifiMutation();
+  const [openModal, setOpenModal] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState<{
+    [key: string]: boolean;
+  }>({});
   const tableHeaders = ["Wifi name", "Wifi password", "Date created", "Action"];
 
   useEffect(() => {
@@ -54,14 +64,40 @@ const WifiTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
-  const handleCheckboxChange = (itemId: string) => {
-    setIsTableDataSelected((prevState: string[]) => {
-      const isAlreadySelected = prevState.includes(itemId);
+  const handleCheckboxChange = (item: IGetWifiProps) => {
+    setIsTableDataSelected((prevState: any) => {
+      const isAlreadySelected = prevState.find(
+        (data: IGetWifiProps) => data?.id === item?.id
+      );
       if (isAlreadySelected) {
-        return prevState.filter((id: string) => id !== itemId);
+        return prevState.filter((data: IGetWifiProps) => data?.id !== item?.id);
       } else {
-        return [...prevState, itemId];
+        return [...prevState, item];
       }
+    });
+  };
+
+  const togglePasswordVisibility = (itemId: string) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [itemId]: !prevState[itemId],
+    }));
+  };
+
+  const handleDelete = async (id: any, callback: () => void) => {
+    console.log(id);
+    const response =
+      isTableDataSelected.length > 0
+        ? await deleteMultiple({ wifiIds: id })
+        : await mutateAsync(id);
+    const { message, success } = response;
+    apiMessageHelper({
+      message,
+      success,
+      onSuccessCallback: () => {
+        setIsTableDataSelected([]);
+        callback();
+      },
     });
   };
 
@@ -83,32 +119,49 @@ const WifiTable = () => {
     [tableHeaders[0]]: (
       <div className="flex md:items-center justify-start md:justify-center gap-2">
         <Checkbox
-          onCheckedChange={() => handleCheckboxChange(item.id)}
+          onCheckedChange={() => handleCheckboxChange(item)}
           indicatorStyle="size-3"
           className=" size-[16px]"
-          checked={isTableDataSelected.includes(item.id)}
+          checked={
+            !!isTableDataSelected.find((data: any) => data.id === item.id)
+          }
         />
         <Text size="sm" variant="primary" weight="regular">
           {item.wifiName}
         </Text>
       </div>
     ),
-    [tableHeaders[1]]: item.createdAt,
-    [tableHeaders[2]]: item.updatedAt,
+    [tableHeaders[1]]: (
+      <div className="flex items-center justify-center space-x-[10px]">
+        <span>{passwordVisibility[item.id] ? item.wifiPassword : "*****"}</span>
+        <div className="flex items-center ">
+          <ViewIcon
+            onClick={() => togglePasswordVisibility(item.id)}
+            className="mr-[10px] size-[20px] text-primary-500 cursor-pointer"
+          />
+          <Copy01Icon
+            onClick={() => copyToClipboard(item.wifiPassword)}
+            className=" text-primary-500 size-[20px] cursor-pointer"
+          />
+        </div>
+      </div>
+    ),
+    [tableHeaders[2]]: convertDate(item.createdAt),
     [tableHeaders[3]]: (
       <DesktopTableAction
-        id={item.id}
+        item={item}
         setShowMobileTable={setShowMobileTable}
         actions={actions}
         setIsTableDataSelected={setIsTableDataSelected}
+        handleDelete={handleDelete}
       />
     ),
     MobileTable: (
       <MobileTableAction
         item={item}
-        id={item.id}
         tableHeaders={tableHeaders}
         actions={actions}
+        handleDelete={handleDelete}
       />
     ),
   }));
@@ -141,6 +194,9 @@ const WifiTable = () => {
         currentPage={currentPage}
         handlePageCount={handlePageCount}
         setPageCount={setPageCount}
+        handleDelete={handleDelete}
+        open={openModal}
+        setOpen={setOpenModal}
       />
     </div>
   );

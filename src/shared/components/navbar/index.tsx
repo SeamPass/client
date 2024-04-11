@@ -41,12 +41,12 @@ const Nav = () => {
   return (
     <div className="fixed top-0 z-50 w-full">
       <div className=" bg-lightblue w-full ">
-        {/* <div className="w-full h-full bg-[url('/bgImage.png')] bg-center bg-no-repeat"> */}
-        <ContainerLayout>
-          <ExtendedNav />
-          <MobileNav />
-        </ContainerLayout>
-        {/* </div> */}
+        <div className="w-full h-full bg-[url('/bgImage.png')] bg-center bg-no-repeat">
+          <ContainerLayout>
+            <ExtendedNav />
+            <MobileNav />
+          </ContainerLayout>
+        </div>
       </div>
 
       <div className="bg-white shadow-[0px_4px_4px_0px_#ECECEC40]">

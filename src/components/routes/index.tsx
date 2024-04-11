@@ -1,23 +1,38 @@
-import Security from "@/pages/Security";
-import CreateAccount from "@/pages/create-account";
-import ForgotPassword from "@/pages/forgot-password";
-import Login from "@/pages/login";
-import EnterOtp from "@/pages/otp";
-import Password from "@/pages/password";
-import SetNewPassword from "@/pages/set-new-password";
-import ThankYouForJoining from "@/pages/thank-you-for-joining";
-import VerificationSuccessful from "@/pages/verification-successful";
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./protected-routes";
 import PublicRoutes from "./public-routes";
-import Profile from "@/pages/profile";
-import VerifyEmail from "@/pages/verify-email";
-import SecretNotes from "@/pages/secret-notes";
-import WifiDetails from "@/pages/wifi-details";
+import LockedRoute from "./locked-routes";
+import UnlockedRoute from "./unlocked-routes";
+import loader from "@/assets/loader/loader.svg";
+
+// Lazy-loaded pages
+const Security = lazy(() => import("@/pages/Security"));
+const CreateAccount = lazy(() => import("@/pages/create-account"));
+const ForgotPassword = lazy(() => import("@/pages/forgot-password"));
+const Login = lazy(() => import("@/pages/login"));
+const EnterOtp = lazy(() => import("@/pages/otp"));
+const Password = lazy(() => import("@/pages/password"));
+const SetNewPassword = lazy(() => import("@/pages/set-new-password"));
+const ThankYouForJoining = lazy(() => import("@/pages/thank-you-for-joining"));
+const VerificationSuccessful = lazy(
+  () => import("@/pages/verification-successful")
+);
+const Profile = lazy(() => import("@/pages/profile"));
+const VerifyEmail = lazy(() => import("@/pages/verify-email"));
+const SecretNotes = lazy(() => import("@/pages/secret-notes"));
+const WifiDetails = lazy(() => import("@/pages/wifi-details"));
+const Locked = lazy(() => import("@/pages/locked"));
 
 const AllRoutes = () => {
   return (
-    <>
+    <Suspense
+      fallback={
+        <div className="flex h-screen w-screen justify-center items-center">
+          <img className="w-[20%] lg:w-[10%] animate-pulse" src={loader} />
+        </div>
+      }
+    >
       <Routes>
         <Route element={<PublicRoutes />}>
           <Route path="/create-account" element={<CreateAccount />} />
@@ -34,14 +49,20 @@ const AllRoutes = () => {
         </Route>
 
         <Route element={<ProtectedRoutes />}>
-          <Route path="/password-vault" element={<Password />} />
-          <Route path="/secret-notes" element={<SecretNotes />} />
-          <Route path="/wifi-details" element={<WifiDetails />} />
-          <Route path="/security" element={<Security />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route element={<UnlockedRoute />}>
+            <Route path="/locked" element={<Locked />} />
+          </Route>
+          <Route element={<LockedRoute />}>
+            <Route path="/secret-notes" element={<SecretNotes />} />
+            <Route path="/wifi-details" element={<WifiDetails />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/profile" element={<Profile />} />
+
+            <Route path="/password-vault" element={<Password />} />
+          </Route>
         </Route>
       </Routes>
-    </>
+    </Suspense>
   );
 };
 

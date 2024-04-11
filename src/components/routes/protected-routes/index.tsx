@@ -1,5 +1,4 @@
 import { GlobalContext } from "@/context/globalContext";
-import Nav from "@/shared/components/navbar";
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -12,7 +11,6 @@ const ProtectedRoutes = () => {
         <Navigate to={"/login"} />
       ) : (
         <>
-          <Nav />
           <Outlet />
         </>
       )}

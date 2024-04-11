@@ -3,6 +3,10 @@ import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import {
+  createValidationSchema,
+  schemaValidation,
+} from "@/helpers/validation-schemas";
 import { Button } from "@/shared/components/button";
 import ModalHeader from "@/shared/modal-header";
 import { encryptUserData } from "@/utils/EncryptDecrypt";
@@ -17,17 +21,21 @@ interface AddWifiProps {
 const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
   const { encryptionKey } = useContext(GlobalContext);
   const { mutateAsync } = useAddWifiMutation();
+  const { requiredFieldValidation } = schemaValidation;
 
   const formik = useFormik({
     initialValues: {
       wifiNAme: "",
       wifiPassword: "",
     },
-    // validationSchema: createValidationSchema({
-    //   email: requiredFieldValidation({
-    //     errorMessage: "Enter your email",
-    //   }),
-    // }),
+    validationSchema: createValidationSchema({
+      wifiNAme: requiredFieldValidation({
+        errorMessage: "Enter your wifi name",
+      }),
+      wifiPassword: requiredFieldValidation({
+        errorMessage: "Enter your wifi password",
+      }),
+    }),
     onSubmit: async (values) => {
       const {
         ciphertextBase64: encryptedWifiPassword,
@@ -47,48 +55,50 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
       apiMessageHelper({
         success,
         message: message,
+        onSuccessCallback: () => {
+          setOpen(!open);
+          formik.resetForm();
+        },
       });
-
-      setOpen;
     },
   });
 
   return (
-    <>
-      <DialogContent>
-        <DialogDescription>
-          <ModalHeader
-            subText="Save and secure important notes here"
-            title="Add Secret note"
+    <DialogContent>
+      <DialogDescription>
+        <ModalHeader
+          subText="Let PassSafe save your Wifi details for you"
+          title="Add Wifi Details"
+        />
+
+        <form
+          onSubmit={formik.handleSubmit}
+          className="mt-6 flex flex-col space-y-4"
+        >
+          <Input
+            label="Wifi name"
+            placeholder="Enter Secret note"
+            name="wifiNAme"
+            onChange={formik.handleChange}
+            value={formik.values.wifiNAme}
+            error={formik.errors.wifiNAme}
+          />
+          <Input
+            type="password"
+            label="Wifi password"
+            placeholder="Enter Secret note"
+            name="wifiPassword"
+            onChange={formik.handleChange}
+            value={formik.values.wifiPassword}
+            error={formik.errors.wifiPassword}
           />
 
-          <form
-            onSubmit={formik.handleSubmit}
-            className="mt-6 flex flex-col space-y-4"
-          >
-            <Input
-              label="Wifi name"
-              placeholder="Enter Secret note"
-              name="wifiNAme"
-              onChange={formik.handleChange}
-              value={formik.values.wifiNAme}
-            />
-            <Input
-              type="password"
-              label="Wifi password"
-              placeholder="Enter Secret note"
-              name="wifiPassword"
-              onChange={formik.handleChange}
-              value={formik.values.wifiPassword}
-            />
-
-            <Button type="submit" variant="primary">
-              Save
-            </Button>
-          </form>
-        </DialogDescription>
-      </DialogContent>
-    </>
+          <Button type="submit" variant="primary">
+            Save
+          </Button>
+        </form>
+      </DialogDescription>
+    </DialogContent>
   );
 };
 

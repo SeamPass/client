@@ -12,14 +12,17 @@ interface TableDropdownProps<T> {
     open: boolean;
     action: () => void;
   }[];
-  id: string;
+
+  handleDelete: (id: any, callback: () => void) => Promise<void>;
+  data: any;
 }
 
 const TableDropdown: React.FC<TableDropdownProps<any>> = ({
-  id,
+  data,
   item,
   tableHeaders,
   actions,
+  handleDelete,
 }) => {
   return (
     <div className="w-full px-4 pt-[14px]  space-y-4">
@@ -37,7 +40,12 @@ const TableDropdown: React.FC<TableDropdownProps<any>> = ({
         {actions.map(({ Component, ...act }) => (
           <>
             <Dialog open={act.open} onOpenChange={act.action}>
-              <Component id={id} open={act.open} setOpen={act.action} />
+              <Component
+                handleDelete={handleDelete}
+                data={data}
+                open={act.open}
+                setOpen={act.action}
+              />
             </Dialog>
             <Text
               className=" cursor-pointer"

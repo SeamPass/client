@@ -15,7 +15,8 @@ export interface InputProps
   inputLeftElement?: JSX.Element;
   icon?: boolean;
   containerStyles?: string;
-  error?: string | false | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: any;
   copyIcon?: JSX.Element;
 }
 
@@ -91,13 +92,11 @@ const Input = React.forwardRef<
               {inputRightElement && (
                 <p className="pr-3 text-[#141B34]">{inputRightElement}</p>
               )}
-
               {icon && (
                 <p className="p-4 absolute top-0 right-0">
                   {error ? <ValidateIcon /> : <TickIcon />}
                 </p>
               )}
-
               <ComponentVisibility appear={type === "password"}>
                 <div
                   className="h-full cursor-pointer"
@@ -109,6 +108,9 @@ const Input = React.forwardRef<
                 </div>
               </ComponentVisibility>
             </div>
+            <p className=" text-error-100 mt-[6px] font-normal text-sm">
+              {error}
+            </p>
           </div>
           {copyIcon && <span className="ml-2">{copyIcon}</span>}
         </div>

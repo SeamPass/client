@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import axiosInstance from "@/config/axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface IAddPasswordProps {
   websiteName: string;
   websiteUrl: string;
   username: { encUsername: string; iv: string };
   password: { encPassword: string; iv: string };
+  passwordStrength: string;
 }
 
-const useEditPasswordMutation = (id: string) => {
+const useEditPasswordMutation = (id: string | undefined) => {
   const handleEditPassword = async (userPasswordInfo: IAddPasswordProps) => {
-    console.log(userPasswordInfo);
     try {
       const { data } = await axiosInstance.put<IAddPasswordProps>(
         `/update-password/${id}`,
@@ -25,8 +25,12 @@ const useEditPasswordMutation = (id: string) => {
     }
   };
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: handleEditPassword,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["password"] });
+    },
     onError: () => {
       console.log("error");
     },

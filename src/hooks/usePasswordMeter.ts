@@ -1,13 +1,10 @@
+import { colors } from "@/utils/colors";
 import zxcvbn from "zxcvbn";
 
 // show strength of passwords
 
-export const usePasswordStrengthMeter = (
-  password: string,
-  setPasswordStrength: React.Dispatch<React.SetStateAction<string>>,
-  setStrengthColor: React.Dispatch<React.SetStateAction<string>>
-) => {
-  const handleShowPasswordStrength = () => {
+export const usePasswordStrengthMeter = () => {
+  const handleShowPasswordStrength = (password: string) => {
     const evaluationResult = zxcvbn(password);
     let strengthMessage = "";
     let color = "";
@@ -16,27 +13,26 @@ export const usePasswordStrengthMeter = (
       case 0:
       case 1:
         strengthMessage = "Weak";
-        color = "red";
+        color = colors.weak;
         break;
       case 2:
         strengthMessage = "Fair";
-        color = "orange";
+        color = colors.good;
         break;
       case 3:
         strengthMessage = "Good";
-        color = "blue";
+        color = colors.medium;
         break;
       case 4:
         strengthMessage = "Strong";
-        color = "#4CAF50";
+        color = colors.strong;
         break;
       default:
         strengthMessage = "Weak";
-        color = "red";
+        color = colors.weak;
     }
 
-    setPasswordStrength(strengthMessage);
-    setStrengthColor(color);
+    return { strengthMessage, color };
   };
 
   return { handleShowPasswordStrength };

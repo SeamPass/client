@@ -1,7 +1,7 @@
 // type Props = {}
 import logo from "@/assets/logo.png";
 import avatar from "@/assets/avatar.png";
-import NotificationIcon from "@/assets/icons/notification.svg?react";
+// import NotificationIcon from "@/assets/icons/notification.svg?react";
 import ArrowDownIcon from "@/assets/icons/arrow-down.svg?react";
 import {
   DropdownMenu,
@@ -12,9 +12,12 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useGetUserQuery from "@/api/user/get-user";
 
 const ExtendedNav = () => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const { data: userData } = useGetUserQuery();
+
   const navigate = useNavigate();
   return (
     <div className="md:flex   items-center hidden justify-between h-[114px]">
@@ -22,15 +25,17 @@ const ExtendedNav = () => {
         <img className="" src={logo} alt="logo" />
       </div>
       <div className="flex items-center gap-6">
-        <div className="w-[44px] h-[44px] cursor-pointer rounded-full bg-white flex justify-center items-center">
+        {/* <div className="w-[44px] h-[44px] cursor-pointer rounded-full bg-white flex justify-center items-center">
           <NotificationIcon />
-        </div>
-        <div className="w-[1px] h-[34.5px] bg-grey-100" />
+        </div> */}
+        {/* <div className="w-[1px] h-[34.5px] bg-grey-100" /> */}
 
         {/* avatar */}
         <div className="flex items-center gap-3">
           <img src={avatar} alt="avatar" />
-          <p>Sofiri A</p>
+          <p className=" capitalize text-[16px] lg:text-[18px] text-primary-100 ">
+            {userData?.user?.nickname}
+          </p>
 
           <DropdownMenu open={isOpenDropDown} onOpenChange={setIsOpenDropDown}>
             <DropdownMenuTrigger asChild>
@@ -53,9 +58,6 @@ const ExtendedNav = () => {
                 className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer"
               >
                 Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer">
-                Account Settings
               </DropdownMenuItem>
               <DropdownMenuItem className="py-2 focus:bg-[#FFF4F3] focus:text-error-100 text-error-100 text-[1rem] cursor-pointer">
                 Logout

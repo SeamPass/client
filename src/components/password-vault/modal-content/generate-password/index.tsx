@@ -25,7 +25,7 @@ const GeneratePassword = () => {
       />
 
       <Tabs defaultValue="account" className="w-full mt-[24px]">
-        <TabsList className=" w-full md:w-[309px] h-[59px] p-2 justify-start bg-[#F3F9FF] ">
+        <TabsList className="max-w-[309px] h-[59px] p-2 justify-start bg-[#F3F9FF] ">
           <TabsTrigger
             className="h-[39px] px-[10px] text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px] "
             value="account"

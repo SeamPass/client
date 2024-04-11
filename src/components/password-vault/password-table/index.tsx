@@ -12,7 +12,6 @@ import useGetUserPasswordQuery, {
 import { Checkbox } from "@/components/ui/checkbox";
 import Text from "@/shared/components/typography";
 import EditPassword from "../modal-content/edit-password";
-import ViewPassword from "../modal-content/view-password";
 import copyToClipboard from "@/utils/copy-to-clipboard";
 import DesktopTableAction from "./desktop-table-action";
 import MobileTableAction from "./mobile-table-action";
@@ -21,11 +20,16 @@ import { handlePasswordStrengthColors } from "@/utils/passwordStrengthColors";
 import DeleteModal from "@/shared/components/modal/delete-modal";
 import { GlobalContext } from "@/context/globalContext";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
+import usePasswordDeleteMutation from "@/api/password/delete-password";
+import useDeleteMultiplePasswordMutation from "@/api/password/delete-multiple-password";
 
 const PasswordTable = () => {
   const { encryptionKey } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
-  const [isTableDataSelected, setIsTableDataSelected] = useState<string[]>([]);
+  const [isTableDataSelected, setIsTableDataSelected] = useState<
+    IGetPasswordProps[]
+  >([]);
   const [showMobileTable, setShowMobileTable] = useState<string | null>(null);
   const [pageCount, setPageCount] = useState(1);
   const { data } = useGetUserPasswordQuery(pageCount);
@@ -35,6 +39,9 @@ const PasswordTable = () => {
     [key: string]: boolean;
   }>({});
   const [decryptedData, setDecryptedData] = useState<any>([]);
+  const { mutateAsync } = usePasswordDeleteMutation();
+  const { mutateAsync: deleteMultiple } = useDeleteMultiplePasswordMutation();
+  const [openModal, setOpenModal] = useState(false);
 
   const tableHeaders = [
     "Website name",
@@ -73,13 +80,17 @@ const PasswordTable = () => {
     decryptAllData();
   }, [data, encryptionKey]);
 
-  const handleCheckboxChange = (itemId: string) => {
-    setIsTableDataSelected((prevState: string[]) => {
-      const isAlreadySelected = prevState.includes(itemId);
+  const handleCheckboxChange = (item: IGetPasswordProps) => {
+    setIsTableDataSelected((prevState: IGetPasswordProps[]) => {
+      const isAlreadySelected = prevState.find(
+        (data: IGetPasswordProps) => data?.id === item?.id
+      );
       if (isAlreadySelected) {
-        return prevState.filter((id: string) => id !== itemId);
+        return prevState.filter(
+          (data: IGetPasswordProps) => data?.id !== item?.id
+        );
       } else {
-        return [...prevState, itemId];
+        return [...prevState, item];
       }
     });
   };
@@ -96,23 +107,41 @@ const PasswordTable = () => {
       name: "edit",
       Component: EditPassword,
     },
-    {
-      name: "view",
-      Component: ViewPassword,
-    },
+    // {
+    //   name: "view",
+    //   Component: ViewPassword,
+    // },
 
     { name: "delete", Component: DeleteModal },
   ];
+
+  const handleDelete = async (id: any, callback: () => void) => {
+    const response =
+      isTableDataSelected.length > 0
+        ? await deleteMultiple({ passwordIds: id })
+        : await mutateAsync(id);
+    const { message, success } = response;
+    console.log(success);
+    apiMessageHelper({
+      message,
+      success,
+      onSuccessCallback: () => {
+        setIsTableDataSelected([]);
+        //close
+        callback();
+      },
+    });
+  };
 
   const tableData = decryptedData?.map((item: IGetPasswordProps) => ({
     ...item,
     [tableHeaders[0]]: (
       <div className="flex md:items-center justify-start md:justify-center gap-2">
         <Checkbox
-          onCheckedChange={() => handleCheckboxChange(item.id)}
+          onCheckedChange={() => handleCheckboxChange(item)}
           indicatorStyle="size-3"
           className=" size-[16px]"
-          checked={isTableDataSelected.includes(item.id)}
+          checked={!!isTableDataSelected.find((data) => data?.id === item?.id)}
         />
         <Text size="sm" variant="primary" weight="regular">
           {item.websiteName}
@@ -121,7 +150,7 @@ const PasswordTable = () => {
     ),
     [tableHeaders[1]]: item.username,
     [tableHeaders[2]]: (
-      <div className="flex items-center justify-center space-x-[10px]">
+      <div className="flex  items-center justify-center space-x-[10px]">
         <span>{passwordVisibility[item.id] ? item.password : "*****"}</span>
         <div className="flex items-center ">
           <ViewIcon
@@ -148,7 +177,7 @@ const PasswordTable = () => {
       <span
         style={{
           color: handlePasswordStrengthColors(
-            item.passwordStrength.toLowerCase()
+            item?.passwordStrength?.toLowerCase()
           ),
         }}
       >
@@ -156,19 +185,22 @@ const PasswordTable = () => {
       </span>
     ),
     [tableHeaders[5]]: (
-      <DesktopTableAction
-        id={item.id}
-        setShowMobileTable={setShowMobileTable}
-        actions={actions}
-        setIsTableDataSelected={setIsTableDataSelected}
-      />
+      <>
+        <DesktopTableAction
+          item={item}
+          setShowMobileTable={setShowMobileTable}
+          actions={actions}
+          setIsTableDataSelected={setIsTableDataSelected}
+          handleDelete={handleDelete}
+        />
+      </>
     ),
     MobileTable: (
       <MobileTableAction
         item={item}
-        id={item.id}
         tableHeaders={tableHeaders}
         actions={actions}
+        handleDelete={handleDelete}
       />
     ),
   }));
@@ -201,6 +233,9 @@ const PasswordTable = () => {
         currentPage={currentPage}
         handlePageCount={handlePageCount}
         setPageCount={setPageCount}
+        handleDelete={handleDelete}
+        open={openModal}
+        setOpen={setOpenModal}
       />
     </div>
   );
