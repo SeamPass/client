@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "start": "serve -s ./dist",
+    "start": "serve -s dist",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -37,7 +37,6 @@
     "react-hot-toast": "^2.4.1",
     "react-otp-input": "^3.1.1",
     "react-router-dom": "^6.22.0",
-    "serve": "^14.2.1",
     "sonner": "^1.4.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
