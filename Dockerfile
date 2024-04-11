@@ -25,13 +25,18 @@ WORKDIR /app
 # Install 'serve' to serve the application on port 3000
 RUN yarn global add serve
 
+# Set a default value for the PORT environment variable
+ENV PORT=3000
+
+
 # Copy the build directory from the build stage to the current stage
 # Replace 'dist' with the appropriate directory if Vite is configured to output to a different directory
 COPY --from=build /app/dist /app
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE $PORT
 
 # Serve the application on port 3000
-CMD ["serve", "-s", "build", "-l", "tcp://0.0.0.0:${PORT}"]
+CMD ["sh", "-c", "serve -s build -l tcp://0.0.0.0:${PORT:-3000}"]
+
 
