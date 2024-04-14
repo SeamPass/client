@@ -14,7 +14,6 @@ const Login = lazy(() => import("@/pages/login"));
 const EnterOtp = lazy(() => import("@/pages/otp"));
 const Password = lazy(() => import("@/pages/password"));
 const SetNewPassword = lazy(() => import("@/pages/set-new-password"));
-const ThankYouForJoining = lazy(() => import("@/pages/thank-you-for-joining"));
 const VerificationSuccessful = lazy(
   () => import("@/pages/verification-successful")
 );
@@ -28,7 +27,7 @@ const AllRoutes = () => {
   return (
     <Suspense
       fallback={
-        <div className="flex h-screen w-screen justify-center items-center">
+        <div className="flex h-screen w-screen bg-primary-300/80 justify-center items-center">
           <img className="w-[20%] lg:w-[10%] animate-pulse" src={loader} />
         </div>
       }
@@ -39,7 +38,7 @@ const AllRoutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/set-new-password" element={<SetNewPassword />} />
-          <Route path="/thank-you" element={<ThankYouForJoining />} />
+          {/* <Route path="/thank-you" element={<ThankYouForJoining />} /> */}
           <Route
             path="/verification-successful"
             element={<VerificationSuccessful />}

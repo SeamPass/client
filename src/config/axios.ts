@@ -19,17 +19,20 @@ axiosInstance.interceptors.response.use(
     const timestampInSeconds = Math.floor(new Date().getTime() / 1000);
     const expiresIn = Number(sessionStorage.getItem("expiresIn"));
     const originalRequest = error.config;
-    if (timestampInSeconds > expiresIn && error.response.status !== 401) {
-      originalRequest._retry = true;
-      return refreshAccessToken().then((newToken) => {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-        sessionStorage.setItem("accessToken", JSON.stringify(newToken));
-        return axios(originalRequest);
-      });
-    } else {
-      // sessionStorage.clear();
-      // window.location.reload();
+
+    if (expiresIn) {
+      if (timestampInSeconds > expiresIn && error.response.status !== 401) {
+        originalRequest._retry = true;
+        return refreshAccessToken().then((newToken) => {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+          sessionStorage.setItem("accessToken", JSON.stringify(newToken));
+          return axios(originalRequest);
+        });
+      } else {
+        // sessionStorage.clear();
+        // window.location.reload();
+      }
     }
 
     return Promise.reject(error);

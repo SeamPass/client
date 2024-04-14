@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import Headset from "@/assets/icons/headset.svg?react";
+// import Headset from "@/assets/icons/headset.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "@/shared/components/logo";
 import Header from "@/shared/components/typography/Header";
@@ -160,13 +160,13 @@ const Login = () => {
               </span>
             </div>
 
-            <Button
+            {/* <Button
               className="flex items-center justify-center gap-2"
               variant="tertiary"
             >
               <Headset />
               Contact Support
-            </Button>
+            </Button> */}
           </div>
         </div>
       </form>
