@@ -18,7 +18,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        spartan: ["League Spartan", "sans-serif"], // Add this line
+        spartan: ["League Spartan", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

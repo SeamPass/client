@@ -14,7 +14,7 @@ export async function deriveKey(
     {
       name: "PBKDF2",
       salt: encoder.encode(salt),
-      iterations: 310000,
+      iterations: 600000,
       hash: "SHA-256",
     },
     keyMaterial,

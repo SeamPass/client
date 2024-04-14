@@ -34,11 +34,11 @@ export async function hashPassword(
     {
       name: "PBKDF2",
       salt: saltBuffer,
-      iterations: 10000,
+      iterations: 600000,
       hash: "SHA-512",
     },
     keyMaterial,
-    512 // Ensure this matches the desired bit length
+    512
   );
 
   // Use bufferToBase64 instead of bufferToHex
