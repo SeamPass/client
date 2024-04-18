@@ -34,7 +34,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       </div>
       <Input
         inputLeftElement={<Search01Icon className=" size-4" />}
-        containerStyles=" w-[350px] ring-0 ring-offset-0 outline-none mt-6"
+        containerStyles=" w-full sm:w-[250px] md:w-[350px] ring-0 ring-offset-0 outline-none mt-6"
         placeholder={placeholder}
         onChange={setSearch}
       />

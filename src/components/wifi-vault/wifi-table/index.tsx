@@ -41,7 +41,6 @@ const WifiTable = () => {
     [key: string]: boolean;
   }>({});
   const tableHeaders = ["Wifi name", "Wifi password", "Date created", "Action"];
-  console.log(search);
   useEffect(() => {
     const decryptAllData = async () => {
       if (!data?.data || !encryptionKey) return;
