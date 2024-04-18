@@ -16,7 +16,7 @@ const TwoStepVerification = () => {
   const [userInfo, setUserInfo] = useState<boolean>(false);
   const { data } = useGetUserQuery();
   const [open, setOpen] = useState(false);
-  console.log(data);
+
   useEffect(() => {
     setUserInfo(data?.user?.is2StepEnabled);
   }, [data]);
