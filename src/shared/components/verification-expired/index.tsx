@@ -8,6 +8,7 @@ import useResendVerificationLinkMutation from "@/api/verification/resend-verific
 import { useSearchParams } from "react-router-dom";
 import { useCountdown } from "@/hooks/useCountdown";
 import { cn } from "@/lib/utils";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 const VerificationExpired = () => {
   const { mutateAsync } = useResendVerificationLinkMutation();
@@ -17,6 +18,18 @@ const VerificationExpired = () => {
   const newSearchParams = new URLSearchParams(searchParams);
   const email = newSearchParams.get("email");
 
+  const handleEmailExpired = async (em: string) => {
+    const response = await mutateAsync({ email: em });
+    const { success, message } = response;
+
+    apiMessageHelper({
+      success,
+      message,
+      onSuccessCallback: () => {
+        !isResendDisabled && startCountdown();
+      },
+    });
+  };
   return (
     <>
       <AuthLayout>
@@ -34,8 +47,7 @@ const VerificationExpired = () => {
 
           <Button
             onClick={() => {
-              email && mutateAsync({ email });
-              !isResendDisabled && startCountdown();
+              email && handleEmailExpired(email);
             }}
             disabled={isResendDisabled}
             size="md"

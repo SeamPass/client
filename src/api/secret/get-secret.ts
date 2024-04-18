@@ -14,11 +14,11 @@ export interface IGetSecret {
   data: IGetSecretProps[];
 }
 
-const useGetSecretQuery = (pageCount: number) => {
+const useGetSecretQuery = (pageCount: number, search: string) => {
   const handleGetSecret = async () => {
     try {
       const { data } = await axiosInstance.get<IGetSecret>(
-        `/get-secret?page=${pageCount}`
+        `/get-secret?page=${pageCount}&search=${search}`
       );
 
       return data;
@@ -29,7 +29,7 @@ const useGetSecretQuery = (pageCount: number) => {
 
   const query = useQuery({
     queryFn: handleGetSecret,
-    queryKey: ["secret", pageCount],
+    queryKey: ["secret", pageCount, search],
   });
 
   return query;

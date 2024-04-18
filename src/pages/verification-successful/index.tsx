@@ -18,8 +18,6 @@ const VerificationSuccessful = () => {
 
   const newSearchParams = new URLSearchParams(searchParams);
   const token = newSearchParams.get("token");
-  console.log(data);
-  console.log(token);
   useEffect(() => {
     mutateAsync({ token });
   }, [token]);

@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const MobileNav = () => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <div className="flex items-center md:hidden justify-between h-[76px]">
@@ -35,7 +37,7 @@ const MobileNav = () => {
               onOpenChange={setIsOpenDropDown}
             >
               <DropdownMenuTrigger asChild>
-                <div className="lg:hidden items-center  gap-[6px] ">
+                <div className="sm:hidden items-center  gap-[6px] ">
                   <ArrowDownIcon className=" size-[24px] cursor-pointer" />
 
                   <div
@@ -49,7 +51,10 @@ const MobileNav = () => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className=" w-[152px] shadow-none  border-[0.5px]  rounded-[16px] border-grey-200 bg-white mt-4 mr-4 p-2 ">
-                <DropdownMenuItem className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer">
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile")}
+                  className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer"
+                >
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem className="py-2 focus:bg-[#FFF4F3] focus:text-error-100 text-error-100 text-[1rem] cursor-pointer">

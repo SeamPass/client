@@ -57,7 +57,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
                       onOpenChange={setIsOpenDropDown}
                     >
                       <DropdownMenuTrigger asChild>
-                        <div className="lg:flex items-center hidden  gap-[6px]">
+                        <div className="sm:flex items-center hidden  gap-[6px]">
                           <span className="mr-[6px]">{Icon}</span>
                           <Text
                             variant="primary"
@@ -118,7 +118,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
 
         <div
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden cursor-pointer size-fit"
+          className="sm:hidden cursor-pointer size-fit"
         >
           {!isOpen ? (
             <Menu02Icon className=" size-6" />
@@ -139,7 +139,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
       <ComponentVisibility appear={isOpen}>
         <div
           style={{ width: "calc(100% -  32px)" }}
-          className="bg-white  fixed mx-auto space-y-7 p-4  rounded-[16px] shadow-[0px_49px_90px_0px_#6F6F6F40] lg:hidden "
+          className="bg-white  fixed mx-auto space-y-7 p-4  rounded-[16px] shadow-[0px_49px_90px_0px_#6F6F6F40] sm:hidden "
         >
           {navItems.map((item, index) => (
             <div key={index} className=" ">

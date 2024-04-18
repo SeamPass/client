@@ -39,7 +39,7 @@ const ExtendedNav = () => {
 
           <DropdownMenu open={isOpenDropDown} onOpenChange={setIsOpenDropDown}>
             <DropdownMenuTrigger asChild>
-              <div className="lg:flex items-center hidden  gap-[6px] ">
+              <div className="sm:flex items-center hidden  gap-[6px] ">
                 <ArrowDownIcon className=" size-[24px] cursor-pointer text-primary-600" />
 
                 <div
