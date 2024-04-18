@@ -75,7 +75,7 @@ const EditSecret: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   });
 
   return (
-    <DialogContent className="h-fit">
+    <DialogContent>
       <DialogDescription>
         <ModalHeader
           subText="Save and secure important notes here"
