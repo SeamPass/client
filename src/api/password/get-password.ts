@@ -17,11 +17,11 @@ export interface IGetPasswords {
   data: IGetPasswordProps[];
 }
 
-const useGetUserPasswordQuery = (pageCount: number) => {
+const useGetUserPasswordQuery = (pageCount: number, search: string) => {
   const handleGetUserPassword = async () => {
     try {
       const { data } = await axiosInstance.get<IGetPasswords>(
-        `/get-password?page=${pageCount}`
+        `/get-password?page=${pageCount}&search=${search}`
       );
 
       return data;
@@ -32,7 +32,7 @@ const useGetUserPasswordQuery = (pageCount: number) => {
 
   const query = useQuery({
     queryFn: handleGetUserPassword,
-    queryKey: ["password", pageCount],
+    queryKey: ["password", pageCount, search],
   });
 
   return query;

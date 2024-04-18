@@ -4,7 +4,7 @@ import apiMessageHelper from "@/helpers/apiMessageHelper";
 import Text from "@/shared/components/typography";
 import Header from "@/shared/components/typography/Header";
 import Enable2Step from "../modal/enable-2-step";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import useGetUserQuery from "@/api/user/get-user";
 import useEnable2StepMutation from "@/api/email-verification/enable2Step";
@@ -13,18 +13,24 @@ import useDisable2StepMutation from "@/api/email-verification/disable2Step";
 const TwoStepVerification = () => {
   const { mutateAsync: enable2Step } = useEnable2StepMutation();
   const { mutateAsync: disable2Step } = useDisable2StepMutation();
+  const [userInfo, setUserInfo] = useState<boolean>(false);
   const { data } = useGetUserQuery();
   const [open, setOpen] = useState(false);
+  console.log(data);
+  useEffect(() => {
+    setUserInfo(data?.user?.is2StepEnabled);
+  }, [data]);
 
-  const userData = data?.user;
   const handleCheckChange = async () => {
-    if (!userData?.is2StepEnabled) {
-      setOpen(true);
+    if (!userInfo) {
       const response = await enable2Step();
       const { message, success } = response;
       apiMessageHelper({
         message,
         success,
+        onSuccessCallback: () => {
+          setOpen(true);
+        },
       });
     } else {
       const response = await disable2Step();
@@ -43,10 +49,7 @@ const TwoStepVerification = () => {
           <Header size="md" weight="medium" variant="primary-100">
             Enable Two- step verification
           </Header>
-          <Switch
-            onCheckedChange={handleCheckChange}
-            checked={userData?.is2StepEnabled}
-          />
+          <Switch onCheckedChange={handleCheckChange} checked={userInfo} />
         </div>
         <Text size="sm" variant="primary" className=" mt-0.5 md:mt-3">
           Two step email verification is an extra layer of security for your

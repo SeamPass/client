@@ -28,7 +28,8 @@ const PasswordTable = () => {
   const [isTableDataSelected, setIsTableDataSelected] = useState<string[]>([]);
   const [showMobileTable, setShowMobileTable] = useState<string | null>(null);
   const [pageCount, setPageCount] = useState(1);
-  const { data } = useGetSecretQuery(pageCount);
+  const [search, setSearch] = useState<string>("");
+  const { data } = useGetSecretQuery(pageCount, search);
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [decryptedData, setDecryptedData] = useState<any>([]);
@@ -37,7 +38,7 @@ const PasswordTable = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const tableHeaders = ["Title name", "Date created", "Last updated", "Action"];
-  console.log(data);
+
   useEffect(() => {
     const decryptAllData = async () => {
       if (!data?.data || !encryptionKey) return;
@@ -148,6 +149,8 @@ const PasswordTable = () => {
       <DashboardHeader
         title="Secret Vault"
         subTitle="Find all your stored password in one place."
+        placeholder={" Search by title"}
+        setSearch={(e: any) => setSearch(e?.target?.value)}
       >
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>

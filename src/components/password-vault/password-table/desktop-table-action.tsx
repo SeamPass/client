@@ -55,11 +55,12 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
         </Popover>
       </div>
       <MoreHorizontalCircle01Icon
-        onClick={() =>
+        onClick={() => {
           setShowMobileTable((prev: string | null) =>
             prev === data.id ? null : data.id
-          )
-        }
+          );
+          setIsTableDataSelected([]);
+        }}
         className="text-[#141B34] cursor-pointer sm:hidden"
       />
 

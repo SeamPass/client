@@ -30,7 +30,7 @@ const PasswordStrengthCriteria = () => {
               className="text-white text-[12px] max-w-[230px]"
             >
               <span className=" font-semibold text-sm">Tips:</span> For a strong
-              password, use at least 12 characters, combining letters, numbers,
+              password, use at least 16 characters, combining letters, numbers,
               and special symbols. Make sure the password strength indicator
               shows 'Strong' before using your new password.
             </Text>

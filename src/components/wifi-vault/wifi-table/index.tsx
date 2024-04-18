@@ -29,7 +29,8 @@ const WifiTable = () => {
   const [isTableDataSelected, setIsTableDataSelected] = useState<string[]>([]);
   const [showMobileTable, setShowMobileTable] = useState<string | null>(null);
   const [pageCount, setPageCount] = useState(1);
-  const { data } = useGetWifiQuery(pageCount);
+  const [search, setSearch] = useState<string>("");
+  const { data } = useGetWifiQuery(pageCount, search);
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [decryptedData, setDecryptedData] = useState<any>([]);
@@ -40,7 +41,7 @@ const WifiTable = () => {
     [key: string]: boolean;
   }>({});
   const tableHeaders = ["Wifi name", "Wifi password", "Date created", "Action"];
-
+  console.log(search);
   useEffect(() => {
     const decryptAllData = async () => {
       if (!data?.data || !encryptionKey) return;
@@ -171,6 +172,8 @@ const WifiTable = () => {
       <DashboardHeader
         title="Wifi Vault"
         subTitle="Find all your stored password in one place."
+        placeholder={" Search by wifi name"}
+        setSearch={(e: any) => setSearch(e?.target?.value)}
       >
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>

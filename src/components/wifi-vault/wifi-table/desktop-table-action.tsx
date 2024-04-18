@@ -22,6 +22,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
   setShowMobileTable,
   actions,
   handleDelete,
+  setIsTableDataSelected,
 }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [openView, setOpenView] = useState(false);
@@ -44,7 +45,7 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
     <div className=" h-full flex justify-center items-center relative">
       <div className="hidden sm:block">
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger onClick={() => setIsTableDataSelected([])}>
             <MoreVerticalIcon className="text-[#141B34] hidden sm:block cursor-pointer" />
           </PopoverTrigger>
           <ActionPopover actions={updatedAction} />
@@ -52,11 +53,12 @@ const DesktopTableAction: React.FC<DesktopTableActionProps<any>> = ({
       </div>
 
       <MoreHorizontalCircle01Icon
-        onClick={() =>
+        onClick={() => {
           setShowMobileTable((prev: string | null) =>
             prev === data.id ? null : data.id
-          )
-        }
+          );
+          setIsTableDataSelected([]);
+        }}
         className="text-[#141B34] cursor-pointer sm:hidden"
       />
 

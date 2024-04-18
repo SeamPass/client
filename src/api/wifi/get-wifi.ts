@@ -14,11 +14,11 @@ export interface IGetWifi {
   data: IGetWifiProps[];
 }
 
-const useGetWifiQuery = (pageCount: number) => {
+const useGetWifiQuery = (pageCount: number, search: string) => {
   const handleGetWifi = async () => {
     try {
       const { data } = await axiosInstance.get<IGetWifi>(
-        `/get-wifi?page=${pageCount}`
+        `/get-wifi?page=${pageCount}&search=${search}`
       );
 
       return data;
@@ -29,7 +29,7 @@ const useGetWifiQuery = (pageCount: number) => {
 
   const query = useQuery({
     queryFn: handleGetWifi,
-    queryKey: ["wifi", pageCount],
+    queryKey: ["wifi", pageCount, search],
   });
 
   return query;

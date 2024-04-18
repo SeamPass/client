@@ -32,7 +32,8 @@ const PasswordTable = () => {
   >([]);
   const [showMobileTable, setShowMobileTable] = useState<string | null>(null);
   const [pageCount, setPageCount] = useState(1);
-  const { data } = useGetUserPasswordQuery(pageCount);
+  const [search, setSearch] = useState<string>("");
+  const { data } = useGetUserPasswordQuery(pageCount, search);
   const { hasNextPage, hasPrevPage, totalPages, currentPage, handlePageCount } =
     usePaginate(data);
   const [passwordVisibility, setPasswordVisibility] = useState<{
@@ -210,6 +211,8 @@ const PasswordTable = () => {
       <DashboardHeader
         title="Password Vault"
         subTitle="Find all your stored password in one place."
+        placeholder={" Search by website name"}
+        setSearch={(e: any) => setSearch(e?.target?.value)}
       >
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
