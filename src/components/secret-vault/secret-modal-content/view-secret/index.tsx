@@ -47,7 +47,7 @@ const ViewSecret: FC<ViewSecretProps> = ({ data }) => {
 
   return (
     <>
-      <DialogContent className="h-fit">
+      <DialogContent>
         <DialogDescription>
           <ModalHeader title="My Diary" />
 
