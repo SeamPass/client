@@ -2,6 +2,8 @@
 import { Dialog } from "@/components/ui/dialog";
 import Text from "../../typography";
 import { ReactNode } from "react";
+import { convertDate } from "@/utils/convertDateFormat";
+import { cn } from "@/lib/utils";
 
 interface TableDropdownProps<T> {
   tableHeaders: string[];
@@ -32,7 +34,7 @@ const TableDropdown: React.FC<TableDropdownProps<any>> = ({
             {title}
           </Text>
           <Text size="sm" variant="primary">
-            {item[title]}
+            {convertDate(item[title])}
           </Text>
         </div>
       ))}
@@ -47,11 +49,16 @@ const TableDropdown: React.FC<TableDropdownProps<any>> = ({
                 setOpen={act.action}
               />
             </Dialog>
+
             <Text
-              className=" cursor-pointer"
+              className={cn(
+                " cursor-pointer capitalize",
+                act.name.toLowerCase() === "delete"
+                  ? " text-error-100"
+                  : "text-grey-100"
+              )}
               onClick={() => act.action()}
               size="sm"
-              variant="primary"
             >
               {act.name}
             </Text>
