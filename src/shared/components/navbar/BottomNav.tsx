@@ -175,14 +175,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
               </div>
               <ComponentVisibility appear={isOpenMobileDropDown}>
                 {index === 1 && (
-                  <ul className="text-[14px] mt-3 flex flex-col gap-y-3 ml-2">
+                  <ul className="text-[14px]  flex  flex-col ml-2">
                     <li
                       onClick={() => {
                         navigate("/secret-notes");
                         setIsOpen(!isOpen);
                         setIsOpenMobileDropDown(!isOpenMobileDropDown);
                       }}
-                      className=" cursor-pointer"
+                      className=" cursor-pointer mt-4 "
                     >
                       Secret notes
                     </li>
@@ -192,7 +192,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
                         setIsOpen(!isOpen);
                         setIsOpenMobileDropDown(!isOpenMobileDropDown);
                       }}
-                      className=" cursor-pointer"
+                      className=" cursor-pointer mt-4"
                     >
                       Wifi network
                     </li>

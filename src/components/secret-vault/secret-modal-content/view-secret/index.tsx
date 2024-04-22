@@ -1,23 +1,36 @@
 import { IGetSecretProps } from "@/api/secret/get-secret";
 import useGetSingleSecretQuery from "@/api/secret/get-single-secret";
-import { DialogContent, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { GlobalContext } from "@/context/globalContext";
 import { Button } from "@/shared/components/button";
+import DeleteModal from "@/shared/components/modal/delete-modal";
 import Text from "@/shared/components/typography";
 import ModalHeader from "@/shared/modal-header";
 import { decryptUserData } from "@/utils/EncryptDecrypt";
 import { useFormik } from "formik";
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 interface ViewSecretProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
   data: IGetSecretProps;
+  handleDelete?: (id: string, callback: () => void) => Promise<void>;
 }
 
-const ViewSecret: FC<ViewSecretProps> = ({ data }) => {
+const ViewSecret: FC<ViewSecretProps> = ({
+  data,
+  handleDelete,
+  open,
+  setOpen,
+}) => {
   const { encryptionKey } = useContext(GlobalContext);
   const { data: secretData } = useGetSingleSecretQuery(data?.id);
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     if (!secretData?.data || !encryptionKey) return;
 
@@ -56,10 +69,25 @@ const ViewSecret: FC<ViewSecretProps> = ({ data }) => {
           </div>
 
           <div className="flex justify-end mt-[73px]">
-            <Button className=" !w-fit px-3 text-error-100">Delete</Button>
+            <Button
+              onClick={() => setIsOpen(!isOpen)}
+              className=" !w-fit px-3 text-error-100"
+            >
+              Delete
+            </Button>
           </div>
         </DialogDescription>
       </DialogContent>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DeleteModal
+          data={secretData?.data}
+          open={open}
+          setOpen={setOpen}
+          setIsOpen={setIsOpen}
+          handleDelete={handleDelete}
+        />
+      </Dialog>
     </>
   );
 };

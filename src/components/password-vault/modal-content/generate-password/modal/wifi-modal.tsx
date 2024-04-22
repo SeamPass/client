@@ -70,12 +70,12 @@ const WifiModal = ({
   }, [password]);
 
   return (
-    <div>
+    <form onSubmit={formik.handleSubmit}>
       <div className="flex flex-col gap-y-[12px] mt-[12px] ">
         <div>
           <Input
             label="Wifi name"
-            type="email"
+            type="text"
             placeholder="Enter Wifi name"
             name="wifiName"
             onChange={formik.handleChange}
@@ -88,7 +88,6 @@ const WifiModal = ({
             }
           />
         </div>
-
         <div>
           <Input
             label="Password"
@@ -120,7 +119,7 @@ const WifiModal = ({
           Save
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

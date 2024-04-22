@@ -18,7 +18,7 @@ import apiMessageHelper from "@/helpers/apiMessageHelper";
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { data } = useGetUserQuery();
-  const { mutateAsync: updateUser } = useUpdateUserMutation();
+  const { mutateAsync: updateUser, isPending } = useUpdateUserMutation();
   const { emailValidation, requiredFieldValidation } = schemaValidation;
   const ref = useRef<HTMLInputElement | null>(null);
   // const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -133,7 +133,7 @@ const ProfilePage = () => {
               />
             </div>
 
-            <Button type="submit" variant="primary">
+            <Button isPending={isPending} type="submit" variant="primary">
               Update
             </Button>
           </form>

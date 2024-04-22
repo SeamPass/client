@@ -67,6 +67,7 @@ const CreateAccount = () => {
       email: "",
       nickname: "",
       password: "",
+      hint: "",
     },
     validationSchema: createValidationSchema({
       email: emailValidation({
@@ -77,6 +78,9 @@ const CreateAccount = () => {
       }),
       password: requiredFieldValidation({
         errorMessage: "",
+      }),
+      hint: requiredFieldValidation({
+        errorMessage: "Enter password hint",
       }),
     }),
     validate: (values) =>
@@ -194,12 +198,13 @@ const CreateAccount = () => {
                       : ""
                   }
                 />
-                {formik.errors.password !== passwordMessage && (
-                  <div className="w-full mt-[11px]">
-                    {" "}
-                    <ErrorProgressBar progress={progress} />
-                  </div>
-                )}
+                {formik.errors.password &&
+                  formik.errors.password !== passwordMessage && (
+                    <div className="w-full mt-[11px]">
+                      {" "}
+                      <ErrorProgressBar progress={progress} />
+                    </div>
+                  )}
                 <p className="mt-1">
                   {progress === 5 ? (
                     <p className="">Awesome, you have a strong password</p>
@@ -208,6 +213,24 @@ const CreateAccount = () => {
                     formik.errors.password
                   )}
                 </p>
+              </div>
+
+              <div>
+                <Input
+                  label="Password hint"
+                  type="hint"
+                  placeholder="E.g Mums name,Pets name etc"
+                  name="hint"
+                  onChange={formik.handleChange}
+                  value={formik.values.hint}
+                  formikOnBlur={formik.handleBlur}
+                  error={
+                    formik.touched.hint && formik.errors.hint
+                      ? formik.errors.hint
+                      : ""
+                  }
+                  icon={formik.touched.hint && !formik.errors.hint}
+                />
               </div>
 
               {/* <div className="flex gap-2 text-[1rem]">

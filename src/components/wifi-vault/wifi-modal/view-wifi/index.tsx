@@ -23,7 +23,7 @@ const ViewWifi: FC<ViewWifiProps> = ({ data }) => {
 
     const decryptData = async () => {
       const decryptedWifiPassword = await decryptUserData(
-        wifiData.data.wifiPassword.encPassword,
+        wifiData.data.wifiPassword.encWifiPassword,
         wifiData.data.wifiPassword.iv,
         encryptionKey
       );
@@ -60,7 +60,7 @@ const ViewWifi: FC<ViewWifiProps> = ({ data }) => {
             <Input
               label="Wifi name"
               placeholder="Enter Secret note"
-              name="wifiNAme"
+              name="wifiName"
               onChange={formik.handleChange}
               value={formik.values.wifiName}
             />

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IGetSecretProps } from "@/api/secret/get-secret";
 import TableDropdown from "@/shared/components/table/table-dropdown";
+import { convertDate } from "@/utils/convertDateFormat";
 import { ReactNode, useState } from "react";
 
 interface MobileTableActionProps<T> {
@@ -36,8 +37,12 @@ const MobileTableAction = ({
     action: actionState[index].action,
   }));
 
+  const updatedAt = convertDate(item.updatedAt);
+  const createdAt = convertDate(item.createdAt);
+  const editedItem = { ...item, updatedAt, createdAt };
+
   const tableData = {
-    [tableHeaders[0]]: item.updatedAt ?? "",
+    [tableHeaders[0]]: editedItem.updatedAt ?? "",
   };
 
   return (

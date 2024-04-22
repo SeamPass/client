@@ -23,7 +23,7 @@ interface EditPasswordProps {
 }
 const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useEditPasswordMutation(data?.id);
+  const { mutateAsync, isPending } = useEditPasswordMutation(data?.id);
   const { data: passwordData } = useGetSinglePasswordQuery(data?.id);
   const { generatePassword, password } = useGeneratePassword();
   const { handleShowPasswordStrength } = usePasswordStrengthMeter();
@@ -157,7 +157,7 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary">
+            <Button isPending={isPending} type="submit" variant="primary">
               Update
             </Button>
           </div>

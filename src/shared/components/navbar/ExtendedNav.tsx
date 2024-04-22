@@ -20,7 +20,7 @@ const ExtendedNav = () => {
 
   const navigate = useNavigate();
   return (
-    <div className="md:flex   items-center hidden justify-between h-[114px]">
+    <div className="sm:flex   items-center hidden justify-between h-[114px]">
       <div className="flex w-[15%] ">
         <img className="" src={logo} alt="logo" />
       </div>
@@ -39,7 +39,7 @@ const ExtendedNav = () => {
 
           <DropdownMenu open={isOpenDropDown} onOpenChange={setIsOpenDropDown}>
             <DropdownMenuTrigger asChild>
-              <div className="sm:flex items-center hidden  gap-[6px] ">
+              <div className=" items-center   gap-[6px] ">
                 <ArrowDownIcon className=" size-[24px] cursor-pointer text-primary-600" />
 
                 <div
@@ -52,7 +52,7 @@ const ExtendedNav = () => {
                 </div>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className=" w-[247px] shadow-[0px_40px_80px_0px_#B9B9B940]  border-[0.5px]  rounded-[16px] border-grey-200 bg-white mt-4 mr-4 p-2 ">
+            <DropdownMenuContent className=" w-[247px] hidden sm:block shadow-[0px_40px_80px_0px_#B9B9B940]  border-[0.5px]  rounded-[16px] border-grey-200 bg-white mt-4 mr-4 p-2 ">
               <DropdownMenuItem
                 onClick={() => navigate("/profile")}
                 className="py-2 focus:bg-primary-300 text-[1rem] focus:text-white cursor-pointer"

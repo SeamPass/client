@@ -24,7 +24,7 @@ interface AddPasswordProps {
 const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
   const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useAddUserPasswordMutation();
+  const { mutateAsync, isPending } = useAddUserPasswordMutation();
   const { generatePassword, password } = useGeneratePassword();
   const { handleShowPasswordStrength } = usePasswordStrengthMeter();
   const formik = useFormik({
@@ -177,7 +177,7 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="primary">
+              <Button isPending={isPending} type="submit" variant="primary">
                 Save
               </Button>
             </div>

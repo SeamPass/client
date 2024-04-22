@@ -20,7 +20,7 @@ interface AddWifiProps {
 
 const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useAddWifiMutation();
+  const { mutateAsync, isPending } = useAddWifiMutation();
   const { requiredFieldValidation } = schemaValidation;
 
   const formik = useFormik({
@@ -77,7 +77,7 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
         >
           <Input
             label="Wifi name"
-            placeholder="Enter Secret note"
+            placeholder="Enter Wifi Name"
             name="wifiNAme"
             onChange={formik.handleChange}
             value={formik.values.wifiNAme}
@@ -86,14 +86,14 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
           <Input
             type="password"
             label="Wifi password"
-            placeholder="Enter Secret note"
+            placeholder="Enter Wifi Password"
             name="wifiPassword"
             onChange={formik.handleChange}
             value={formik.values.wifiPassword}
             error={formik.errors.wifiPassword}
           />
 
-          <Button type="submit" variant="primary">
+          <Button isPending={isPending} type="submit" variant="primary">
             Save
           </Button>
         </form>

@@ -23,7 +23,7 @@ const Locked = () => {
   //   const { passwordValidation } = schemaValidation;
   const { setEncryptionKey } = useContext(GlobalContext);
   const { data: userData } = useGetUserQuery();
-  const { mutateAsync } = useUnlockAccountMutation();
+  const { mutateAsync, isPending } = useUnlockAccountMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -104,6 +104,7 @@ const Locked = () => {
           <Button
             type="submit"
             size="md"
+            isPending={isPending}
             variant="primary"
             className="mt-4 lg:mt-6 "
           >
