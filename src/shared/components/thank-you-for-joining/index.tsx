@@ -42,7 +42,7 @@ const ThankYouForJoining: React.FC<ThankYouForJoiningProps> = ({
           onClick={openEmailApp}
           size="md"
           variant="primary"
-          className="mt-4 lg:mt-6 md:!w-[202px]"
+          className="mt-4 lg:mt-6 md:!w-[202px] mx-auto"
         >
           Go to email
         </Button>

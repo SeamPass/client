@@ -67,7 +67,7 @@ const CreateAccount = () => {
       email: "",
       nickname: "",
       password: "",
-      hint: "",
+      // hint: "",
     },
     validationSchema: createValidationSchema({
       email: emailValidation({
@@ -79,9 +79,9 @@ const CreateAccount = () => {
       password: requiredFieldValidation({
         errorMessage: "",
       }),
-      hint: requiredFieldValidation({
-        errorMessage: "Enter password hint",
-      }),
+      // hint: requiredFieldValidation({
+      //   errorMessage: "Enter password hint",
+      // }),
     }),
     validate: (values) =>
       checkValidation({ values, setProgress, passwordMessage }),
@@ -89,12 +89,14 @@ const CreateAccount = () => {
     onSubmit: async (values) => {
       const salt = generateSalt();
       const hashedPassword = await hashPassword(values.password, salt);
+      console.log(hashedPassword);
       const response = await mutateAsync({
         hashedPassword,
         nickname: values.nickname,
         email: values.email,
         clientSalt: salt,
       });
+      console.log(response);
       const { message, success, data } = response;
       apiMessageHelper({
         success,
