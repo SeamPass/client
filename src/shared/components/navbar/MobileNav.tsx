@@ -48,12 +48,12 @@ const MobileNav = () => {
 
           {/* avatar */}
           <div className="flex items-center gap-2 md:gap-3">
-            <div className="size-[40px] rounded-full overflow-hidden">
-              <img
-                src={data?.user?.avatar ? data?.user?.avatar : avatar}
-                alt="avatar"
-              />
-            </div>
+            <img
+              src={data?.user?.avatar ? data?.user?.avatar : avatar}
+              alt="avatar"
+              className="size-[40px] rounded-full"
+            />
+
             <p>{data?.user?.nickname}</p>
 
             <DropdownMenu
