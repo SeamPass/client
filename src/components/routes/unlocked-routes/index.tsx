@@ -12,7 +12,7 @@ const UnlockedRoute = () => {
           <Outlet />
         </>
       ) : (
-        <Navigate to={"/password-vault"} />
+        <Navigate to={"/"} />
       )}
     </>
   );

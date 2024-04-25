@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoutes = () => {
   const { auth } = useContext(GlobalContext);
-  console.log(auth);
+
   return (
     <>
       {!auth.token ? (
