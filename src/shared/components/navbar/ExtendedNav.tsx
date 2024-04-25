@@ -50,7 +50,7 @@ const ExtendedNav = () => {
         <div className="flex items-center gap-3">
           <div className="size-[60px] rounded-full overflow-hidden">
             <img
-              src={userData?.user ? userData?.user?.avatar : avatar}
+              src={userData?.user?.avatar ? userData?.user?.avatar : avatar}
               alt="avatar"
             />
           </div>

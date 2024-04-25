@@ -50,7 +50,7 @@ const MobileNav = () => {
           <div className="flex items-center gap-2 md:gap-3">
             <div className="size-[40px] rounded-full overflow-hidden">
               <img
-                src={data?.user ? data?.user?.avatar : avatar}
+                src={data?.user?.avatar ? data?.user?.avatar : avatar}
                 alt="avatar"
               />
             </div>
