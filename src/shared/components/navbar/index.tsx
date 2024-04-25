@@ -19,7 +19,7 @@ const navItems: NavItem = [
   {
     name: "password vault",
     icon: <LockKeyIcon className="size-5 md:size-6 text-grey-100" />,
-    href: "/password-vault",
+    href: "/",
   },
   {
     name: "stored items",

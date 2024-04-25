@@ -53,7 +53,7 @@ const VerificationExpired = () => {
             size="md"
             variant="primary"
             className={cn(
-              "mt-4 lg:mt-6 md:!w-[202px]",
+              "mt-4 lg:mt-6 md:!w-[202px] mx-auto",
               isResendDisabled &&
                 "bg-[#CCD2D9] active:bg-[#CCD2D9]  hover:bg-[#CCD2D9]"
             )}
