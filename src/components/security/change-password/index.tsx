@@ -22,7 +22,7 @@ const ChangePassword = () => {
   const [progress, setProgress] = useState(0);
   const passwordMessage = "Enter new password";
   const { passwordValidation, matchFieldValidation } = schemaValidation;
-  const { mutateAsync } = useChangePasswordMutation();
+  const { mutateAsync, isPending } = useChangePasswordMutation();
   const { mutateAsync: updateKeys } = useUpdateEncryptionKeyMutation();
   const { data: userData } = useGetUserQuery();
 
@@ -190,7 +190,7 @@ const ChangePassword = () => {
           />
         </div>
 
-        <Button className="mt-6" variant="primary">
+        <Button isPending={isPending} className="mt-6" variant="primary">
           Change password
         </Button>
       </form>

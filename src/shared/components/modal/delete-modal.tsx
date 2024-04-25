@@ -3,15 +3,16 @@ import { DialogContent, DialogDescription } from "@/components/ui/dialog";
 import ModalHeader from "@/shared/modal-header";
 import { Button } from "../button";
 import { FC } from "react";
-import snapchat from "@/assets/Snapchat.png";
 import ComponentVisibility from "../componentVisibility";
+import { LockKeyIcon } from "hugeicons-react";
 
 interface DeleteModalProps {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
-  deleteData: any[];
+  deleteData?: any[];
   handleDelete?: (id: any, callback: () => void) => Promise<void>;
   data?: any;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DeleteModal: FC<DeleteModalProps> = ({
@@ -20,11 +21,12 @@ const DeleteModal: FC<DeleteModalProps> = ({
   deleteData,
   data,
   handleDelete,
+  setIsOpen,
 }) => {
   const passwordIds = deleteData?.map((item) => item.id);
 
   return (
-    <DialogContent className="h-fit">
+    <DialogContent>
       <DialogDescription>
         <ModalHeader
           subText="This action cannot be undone"
@@ -32,14 +34,16 @@ const DeleteModal: FC<DeleteModalProps> = ({
             deleteData ? deleteData?.length : ""
           } Logins`}
         />
-        <ComponentVisibility appear={deleteData?.length > 0}>
+        <ComponentVisibility appear={!!deleteData?.length}>
           <div className="mt-7 space-y-6">
             {deleteData?.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
-                <img src={snapchat} alt="snapchat" />
+                <LockKeyIcon />
                 <div>
-                  <p>{item?.websiteName || item?.title || item?.wifiName}</p>
-                  <p>{item?.username}</p>
+                  <p className=" text-primary-300 text-[20px]">
+                    {item?.websiteName || item?.title || item?.wifiName}
+                  </p>
+                  <p className="text-[16px]">{item?.username}</p>
                 </div>
               </div>
             ))}
@@ -49,10 +53,17 @@ const DeleteModal: FC<DeleteModalProps> = ({
         <ComponentVisibility appear={!!data}>
           <div className="mt-7 space-y-6">
             <div className="flex items-center gap-2">
-              <img src={snapchat} alt="snapchat" />
+              <div
+                className="size-9 rounded-full bg-[#F5F5F5] flex justify-center items-center
+"
+              >
+                <LockKeyIcon className=" text-primary-300 text-[20px]" />
+              </div>
               <div>
-                <p>{data?.websiteName || data?.title || data?.wifiName}</p>
-                <p>{data?.username}</p>
+                <p className=" text-primary-300 text-[20px]">
+                  {data?.websiteName || data?.title || data?.wifiName}
+                </p>
+                <p className="text-[16px]">{data?.username}</p>
               </div>
             </div>
           </div>
@@ -65,8 +76,9 @@ const DeleteModal: FC<DeleteModalProps> = ({
           <Button
             onClick={() =>
               handleDelete &&
-              handleDelete(passwordIds || data?.id, () => {
+              handleDelete(passwordIds || data?.id || data?._id, () => {
                 setOpen(false);
+                setIsOpen && setIsOpen(false);
               })
             }
             variant="error"

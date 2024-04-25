@@ -30,8 +30,8 @@ axiosInstance.interceptors.response.use(
           return axios(originalRequest);
         });
       } else {
-        // sessionStorage.clear();
-        // window.location.reload();
+        sessionStorage.clear();
+        window.location.reload();
       }
     }
 

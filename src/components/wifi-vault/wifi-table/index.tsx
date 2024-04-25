@@ -85,7 +85,6 @@ const WifiTable = () => {
   };
 
   const handleDelete = async (id: any, callback: () => void) => {
-    console.log(id);
     const response =
       isTableDataSelected.length > 0
         ? await deleteMultiple({ wifiIds: id })

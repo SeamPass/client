@@ -2,7 +2,7 @@
 import useVerifyMutation from "@/api/verification/verify-email";
 import { Button } from "@/shared/components/button";
 import ComponentVisibility from "@/shared/components/componentVisibility";
-import Loader from "@/shared/components/loader";
+import { PageLoader } from "@/shared/components/loader";
 import Logo from "@/shared/components/logo";
 import Text from "@/shared/components/typography";
 import Header from "@/shared/components/typography/Header";
@@ -25,7 +25,7 @@ const VerificationSuccessful = () => {
   return (
     <>
       <ComponentVisibility appear={isPending}>
-        <Loader />
+        <PageLoader />
       </ComponentVisibility>
       <ComponentVisibility appear={!isPending && data?.success}>
         <AuthLayout>

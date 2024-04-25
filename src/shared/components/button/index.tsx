@@ -1,5 +1,6 @@
 import { ButtonClasses } from "../../@types";
 import themes from "../../themes/button.themes";
+import { Loader } from "../loader";
 
 interface IButtonProps
   extends React.DetailedHTMLProps<
@@ -10,7 +11,7 @@ interface IButtonProps
   size?: keyof ButtonClasses["size"];
   className?: string;
   children?: React.ReactNode;
-  isLoading?: boolean;
+  isPending?: boolean;
 }
 
 export const Button = ({
@@ -19,16 +20,19 @@ export const Button = ({
   variant,
   className,
   size,
+  isPending,
   ...rest
 }: IButtonProps) => {
   return (
     <button
-      className={`${className}  ${themes.base}     ${
+      className={`${className}  ${
+        themes.base
+      } flex justify-center items-center     ${
         variant && themes.variant[variant]
       } ${size && themes.size[size]}`}
       {...rest}
     >
-      {children}
+      {isPending ? <Loader /> : children}
     </button>
   );
 };

@@ -21,7 +21,7 @@ interface EditPasswordProps {
 }
 const EditSecret: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useEditSecretMutation(data?.id);
+  const { mutateAsync, isPending } = useEditSecretMutation(data?.id);
   const { data: secretData } = useGetSingleSecretQuery(data?.id);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ const EditSecret: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
             value={formik.values.note}
           />
 
-          <Button type="submit" variant="primary">
+          <Button isPending={isPending} type="submit" variant="primary">
             Save
           </Button>
         </form>

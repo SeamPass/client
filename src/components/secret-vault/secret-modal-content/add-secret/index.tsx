@@ -22,7 +22,7 @@ interface AddSecretProps {
 const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
   const { requiredFieldValidation } = schemaValidation;
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useAddSecretMutation();
+  const { mutateAsync, isPending } = useAddSecretMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -88,7 +88,7 @@ const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
             error={formik.errors.note}
           />
 
-          <Button type="submit" variant="primary">
+          <Button isPending={isPending} type="submit" variant="primary">
             Save
           </Button>
         </form>

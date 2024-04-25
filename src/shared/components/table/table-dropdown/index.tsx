@@ -2,7 +2,6 @@
 import { Dialog } from "@/components/ui/dialog";
 import Text from "../../typography";
 import { ReactNode } from "react";
-import { convertDate } from "@/utils/convertDateFormat";
 import { cn } from "@/lib/utils";
 
 interface TableDropdownProps<T> {
@@ -34,7 +33,7 @@ const TableDropdown: React.FC<TableDropdownProps<any>> = ({
             {title}
           </Text>
           <Text size="sm" variant="primary">
-            {convertDate(item[title])}
+            {item[title]}
           </Text>
         </div>
       ))}

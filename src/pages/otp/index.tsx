@@ -1,7 +1,10 @@
+import useResendOtpMutation from "@/api/auth/resend-otp";
 import useVerifyOtpMutation from "@/api/email-verification/verify-login-otp";
 import { GlobalContext } from "@/context/globalContext";
 import apiMessageHelper from "@/helpers/apiMessageHelper";
+import { useCountdown } from "@/hooks/useCountdown";
 import useOtpValidation from "@/hooks/useOtpValidation";
+import { cn } from "@/lib/utils";
 import { Button } from "@/shared/components/button";
 import Logo from "@/shared/components/logo";
 import Otp from "@/shared/components/otp-input";
@@ -17,10 +20,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const EnterOtp = () => {
   const { otp, setOtp, error, setError } = useOtpValidation();
   const navigate = useNavigate();
-  const { mutateAsync } = useVerifyOtpMutation();
+  const { mutateAsync, isPending } = useVerifyOtpMutation();
+  const { mutateAsync: resendOtp } = useResendOtpMutation();
 
   const [searchParams] = useSearchParams();
   const { handleLogin, setEncryptionKey, password } = useContext(GlobalContext);
+  const { isResendDisabled, formatCountdown, startCountdown, countdown } =
+    useCountdown();
 
   useEffect(() => {
     if (!password || !email) return navigate("/login");
@@ -28,6 +34,22 @@ const EnterOtp = () => {
 
   const newSearchParams = new URLSearchParams(searchParams);
   const email = newSearchParams.get("email");
+
+  useEffect(() => {
+    email && startCountdown();
+  }, []);
+
+  const handleResendOtp = async () => {
+    const response = await resendOtp({ email });
+    const { success, message } = response;
+    apiMessageHelper({
+      message,
+      success,
+      onSuccessCallback() {
+        !isResendDisabled && startCountdown();
+      },
+    });
+  };
 
   const handleSubmit = async () => {
     if (otp.length !== 6) {
@@ -38,7 +60,6 @@ const EnterOtp = () => {
         email,
       });
 
-      console.log(response);
       const { message, success, accessToken, expiresIn } = response;
       apiMessageHelper({
         message,
@@ -85,19 +106,36 @@ const EnterOtp = () => {
         <Otp otp={otp} setOtp={setOtp} error={error} />
 
         <Button
+          isPending={isPending}
           onClick={handleSubmit}
           type="button"
           size="md"
           variant="primary"
-          className="mt-6 md:!w-[202px]"
+          className="mt-6 md:!w-[202px] mx-auto"
         >
           Submit
         </Button>
 
         <div className="flex justify-center gap-2 text-base mt-4">
           <span className="text-grey-100">Didn't get the link? </span>
-          <span className="font-semibold cursor-pointer">Resend</span>
+          <button
+            disabled={isResendDisabled}
+            onClick={handleResendOtp}
+            className={cn(
+              "font-semibold cursor-pointer ",
+              isResendDisabled && "text-[#CCD2D9]"
+            )}
+          >
+            Resend
+          </button>
         </div>
+        {isResendDisabled && countdown !== null && countdown > 0 && (
+          <div className="text-center my-4">
+            <span className="text-success-100 text-base">
+              {formatCountdown()}
+            </span>
+          </div>
+        )}
       </div>
     </AuthLayout>
   );

@@ -2,7 +2,8 @@
 import { IGetPasswordProps } from "@/api/password/get-password";
 import TableDropdown from "@/shared/components/table/table-dropdown";
 import copyToClipboard from "@/utils/copy-to-clipboard";
-import { Copy01Icon, ViewIcon } from "hugeicons-react";
+import { handlePasswordStrengthColors } from "@/utils/passwordStrengthColors";
+import { Copy01Icon, ViewIcon, ViewOffIcon } from "hugeicons-react";
 import { ReactNode, useState } from "react";
 
 interface MobileTableActionProps<T> {
@@ -24,6 +25,9 @@ const MobileTableAction = ({
   const [openEdit, setOpenEdit] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const tableHeaders = ["Last used", "Password", "URL", "Security strength"];
 
@@ -38,13 +42,30 @@ const MobileTableAction = ({
     action: actionState[index].action,
   }));
 
+  const togglePasswordVisibility = (itemId: string) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [itemId]: !prevState[itemId],
+    }));
+  };
+
   const tableData = {
     [tableHeaders[0]]: item.lastUsed ?? "",
     [tableHeaders[1]]: (
       <div className="flex items-center justify-center space-x-[10px]">
-        <span>{item.password}</span>
+        <span>{passwordVisibility[item.id] ? item.password : "*****"}</span>
         <div className="flex items-center ">
-          <ViewIcon className="mr-[10px] size-[20px] text-primary-500 cursor-pointer" />{" "}
+          {passwordVisibility[item.id] ? (
+            <ViewIcon
+              onClick={() => togglePasswordVisibility(item.id)}
+              className="mr-[10px] size-[20px] text-primary-500 cursor-pointer"
+            />
+          ) : (
+            <ViewOffIcon
+              onClick={() => togglePasswordVisibility(item.id)}
+              className="mr-[10px] size-[20px] text-primary-500 cursor-pointer"
+            />
+          )}{" "}
           <Copy01Icon
             onClick={() => copyToClipboard(item.password)}
             className=" text-primary-500 size-[20px] cursor-pointer"
@@ -61,7 +82,17 @@ const MobileTableAction = ({
         {item.url}
       </a>
     ),
-    [tableHeaders[3]]: item.passwordStrength ?? "",
+    [tableHeaders[3]]: (
+      <span
+        style={{
+          color: handlePasswordStrengthColors(
+            item?.passwordStrength?.toLowerCase()
+          ),
+        }}
+      >
+        {item.passwordStrength}
+      </span>
+    ),
   };
 
   return (

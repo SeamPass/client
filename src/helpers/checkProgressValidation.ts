@@ -17,7 +17,7 @@ export const checkValidation = ({
 }: CheckValidationProps) => {
   const errors: { password?: string } = {};
   let strength = 0;
-  if (values.password.length >= 8) strength++;
+  if (values.password.length >= 12) strength++;
   if (/[A-Z]/.test(values.password)) strength++;
   if (/[a-z]/.test(values.password)) strength++;
   if (/[0-9]/.test(values.password)) strength++;
@@ -28,8 +28,8 @@ export const checkValidation = ({
 
   if (!values.password) {
     errors.password = passwordMessage;
-  } else if (values.password.length < 8) {
-    errors.password = "Password must be at least 8 characters long.";
+  } else if (values.password.length < 12) {
+    errors.password = "Password must be at least 12 characters long.";
   } else if (!/[A-Z]/.test(values.password)) {
     errors.password = "Password must contain at least one uppercase letter.";
   } else if (!/[a-z]/.test(values.password)) {

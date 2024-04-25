@@ -30,7 +30,7 @@ const CreateAccount = () => {
   const { emailValidation, requiredFieldValidation } = schemaValidation;
   const [progress, setProgress] = useState(0);
   const passwordMessage = "Enter master password";
-  const { mutateAsync, data } = useCreateAccountMutation();
+  const { mutateAsync, data, isPending } = useCreateAccountMutation();
   const { mutateAsync: encryptionMutateAsync } = useEncryptionKeyMutation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [storePg, setStorePg] = useState<string | null>(null);
@@ -67,6 +67,7 @@ const CreateAccount = () => {
       email: "",
       nickname: "",
       password: "",
+      hint: "",
     },
     validationSchema: createValidationSchema({
       email: emailValidation({
@@ -77,6 +78,9 @@ const CreateAccount = () => {
       }),
       password: requiredFieldValidation({
         errorMessage: "",
+      }),
+      hint: requiredFieldValidation({
+        errorMessage: "Enter password hint",
       }),
     }),
     validate: (values) =>
@@ -97,7 +101,7 @@ const CreateAccount = () => {
         message: message,
         onSuccessCallback: async () => {
           const masterKey = await generateKey();
-          const sgek = await deriveKey(
+          const sek = await deriveKey(
             values.password,
             response.data.encryptionSalt
           );
@@ -105,7 +109,7 @@ const CreateAccount = () => {
           // Generate an IV for encryption using the generated masterKey from the server
           const { ciphertextBase64, ivBase64 } = await encryptUserData(
             masterKey,
-            sgek
+            sek
           );
 
           //this send the encrypted master key to the server
@@ -194,12 +198,13 @@ const CreateAccount = () => {
                       : ""
                   }
                 />
-                {formik.errors.password !== passwordMessage && (
-                  <div className="w-full mt-[11px]">
-                    {" "}
-                    <ErrorProgressBar progress={progress} />
-                  </div>
-                )}
+                {formik.errors.password &&
+                  formik.errors.password !== passwordMessage && (
+                    <div className="w-full mt-[11px]">
+                      {" "}
+                      <ErrorProgressBar progress={progress} />
+                    </div>
+                  )}
                 <p className="mt-1">
                   {progress === 5 ? (
                     <p className="">Awesome, you have a strong password</p>
@@ -209,6 +214,24 @@ const CreateAccount = () => {
                   )}
                 </p>
               </div>
+
+              {/* <div>
+                <Input
+                  label="Password hint"
+                  type="hint"
+                  placeholder="E.g Mums name,Pets name etc"
+                  name="hint"
+                  onChange={formik.handleChange}
+                  value={formik.values.hint}
+                  formikOnBlur={formik.handleBlur}
+                  error={
+                    formik.touched.hint && formik.errors.hint
+                      ? formik.errors.hint
+                      : ""
+                  }
+                  icon={formik.touched.hint && !formik.errors.hint}
+                />
+              </div> */}
 
               {/* <div className="flex gap-2 text-[1rem]">
               <Checkbox />
@@ -222,7 +245,12 @@ const CreateAccount = () => {
               </span>
             </div> */}
 
-              <Button type="submit" className="mt-6" variant="primary">
+              <Button
+                isPending={isPending}
+                type="submit"
+                className="mt-6"
+                variant="primary"
+              >
                 Create account
               </Button>
 

@@ -19,7 +19,7 @@ interface EditWifiProps {
 
 const EditWifi: FC<EditWifiProps> = ({ setOpen, data }) => {
   const { encryptionKey } = useContext(GlobalContext);
-  const { mutateAsync } = useEditWifiMutation(data?.id);
+  const { mutateAsync, isPending } = useEditWifiMutation(data?.id);
   const { data: wifiData } = useGetSingleWifiQuery(data?.id);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const EditWifi: FC<EditWifiProps> = ({ setOpen, data }) => {
       });
     },
   });
-  console.log(formik.values.wifiName);
+
   return (
     <>
       <DialogContent>
@@ -89,21 +89,21 @@ const EditWifi: FC<EditWifiProps> = ({ setOpen, data }) => {
           >
             <Input
               label="Wifi name"
-              placeholder="Enter Secret note"
-              name="wifiNAme"
+              placeholder="Enter Wifi Name"
+              name="wifiName"
               onChange={formik.handleChange}
               value={formik.values.wifiName}
             />
             <Input
               type="password"
               label="Wifi password"
-              placeholder="Enter Secret note"
+              placeholder="Enter Wifi Password"
               name="wifiPassword"
               onChange={formik.handleChange}
               value={formik.values.wifiPassword}
             />
 
-            <Button type="submit" variant="primary">
+            <Button isPending={isPending} type="submit" variant="primary">
               Save
             </Button>
           </form>
