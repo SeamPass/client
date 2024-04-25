@@ -48,12 +48,12 @@ const ExtendedNav = () => {
 
         {/* avatar */}
         <div className="flex items-center gap-3">
-          <div className="size-[60px] rounded-full overflow-hidden">
-            <img
-              src={userData?.user?.avatar ? userData?.user?.avatar : avatar}
-              alt="avatar"
-            />
-          </div>
+          <img
+            src={userData?.user?.avatar ? userData?.user?.avatar : avatar}
+            alt="avatar"
+            className="size-[50px] rounded-full"
+          />
+
           <p className=" capitalize text-[16px] lg:text-[18px] text-primary-100 ">
             {userData?.user?.nickname}
           </p>
