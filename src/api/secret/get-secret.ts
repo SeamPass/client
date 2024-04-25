@@ -31,6 +31,7 @@ const useGetSecretQuery = (pageCount: number, search: string) => {
     queryFn: handleGetSecret,
     queryKey: ["secret", pageCount, search],
   });
+  ``;
 
   return query;
 };

@@ -57,10 +57,10 @@ const Locked = () => {
           const encryptionSalt = response?.salt;
           const mk = response?.mk;
           const ivBase64 = response?.iv;
-          const sgek = await deriveKey(values.masterPassword, encryptionSalt);
-          console.log(mk, encryptionSalt, ivBase64);
+          const sek = await deriveKey(values.masterPassword, encryptionSalt);
+
           try {
-            const decryptedSGEK = await decryptUserData(mk, ivBase64, sgek);
+            const decryptedSGEK = await decryptUserData(mk, ivBase64, sek);
             const importMk = await importKeyFromBase64(decryptedSGEK);
             setEncryptionKey && setEncryptionKey(importMk);
           } catch (error) {

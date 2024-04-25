@@ -8,7 +8,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
   const [encryptionKey, setEncryptionKey] = useState<CryptoKey | null>(null);
   const [password, setPassword] = useState<string | null>(null);
   const token = sessionStorage.getItem("accessToken");
-  console.log(encryptionKey);
+
   useEffect(() => {
     if (token) {
       handleLogin(token);

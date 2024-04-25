@@ -76,8 +76,6 @@ const CustomMemorablePassword: React.FC<CustomMemorablePasswordProps> = ({
                   <InformationDiamondIcon className="size-5 text-[#197CE2] cursor-pointer" />
                 </TooltipTrigger>
                 <TooltipContent
-                  side="right"
-                  align="center"
                   avoidCollisions={true}
                   className=" relative bg-primary-100 "
                 >
@@ -90,7 +88,7 @@ const CustomMemorablePassword: React.FC<CustomMemorablePasswordProps> = ({
                   >
                     {tooltipsInfo[item.text]?.message}
                   </Text>
-                  <div className="bg-primary-100 w-[14px] h-2 absolute -left-[4px] -translate-y-[50%] top-[50%] rotate-45" />
+                  <div className="bg-primary-100 w-[14px] h-2 absolute -bottom-[1px] -translate-x-[50%] left-[50%] rotate-45" />
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

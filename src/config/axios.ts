@@ -17,6 +17,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const timestampInSeconds = Math.floor(new Date().getTime() / 1000);
+
     const expiresIn = Number(sessionStorage.getItem("expiresIn"));
     const originalRequest = error.config;
 
