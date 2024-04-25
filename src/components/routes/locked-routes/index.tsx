@@ -5,7 +5,6 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const LockedRoute = () => {
   const { encryptionKey } = useContext(GlobalContext);
-  console.log(encryptionKey);
 
   return (
     <>

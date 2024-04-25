@@ -57,7 +57,7 @@ const AllRoutes = () => {
             <Route path="/security" element={<Security />} />
             <Route path="/profile" element={<Profile />} />
 
-            <Route path="/password-vault" element={<Password />} />
+            <Route index path="/password-vault" element={<Password />} />
           </Route>
         </Route>
       </Routes>
