@@ -4,6 +4,7 @@ import RandomGenerator from "./random-generator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ModalHeader from "@/shared/modal-header";
 import MemorableGenerator from "./memorable-generator";
+import { useNavigate } from "react-router-dom";
 
 const GeneratePassword = () => {
   const [progress, setProgress] = useState<number[]>([0]);
@@ -16,6 +17,8 @@ const GeneratePassword = () => {
   //display length of slider
   const passwordLength = convertToPasswordLength(progress[0]);
 
+  const navigate = useNavigate();
+
   return (
     <DialogContent>
       <ModalHeader
@@ -24,28 +27,32 @@ const GeneratePassword = () => {
         title="Generate Password"
       />
 
-      <Tabs defaultValue="account" className="w-full mt-[24px]">
+      <Tabs
+        defaultValue="random"
+        onValueChange={(value: string) => navigate(`?type=${value}`)}
+        className="w-full mt-[24px]"
+      >
         <TabsList className="max-w-[309px] h-[59px] p-2 justify-start bg-[#F3F9FF] ">
           <TabsTrigger
             className="h-[39px] px-[10px] text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px] "
-            value="account"
+            value="random"
           >
             Generate password
           </TabsTrigger>
           <TabsTrigger
             className="h-[39px] px-[10px] text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px]"
-            value="password"
+            value="memorable"
           >
             Memorable password
           </TabsTrigger>
         </TabsList>
-        <TabsContent className="w-full" value="account">
+        <TabsContent className="w-full" value={"random"}>
           <RandomGenerator
             setProgress={setProgress}
             passwordLength={passwordLength}
           />
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value={"memorable"}>
           <MemorableGenerator />
         </TabsContent>
       </Tabs>

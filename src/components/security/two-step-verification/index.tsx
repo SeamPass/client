@@ -9,6 +9,7 @@ import { Dialog } from "@/components/ui/dialog";
 import useGetUserQuery from "@/api/user/get-user";
 import useEnable2StepMutation from "@/api/email-verification/enable2Step";
 import useDisable2StepMutation from "@/api/email-verification/disable2Step";
+import { useCountdown } from "@/hooks/useCountdown";
 
 const TwoStepVerification = () => {
   const { mutateAsync: enable2Step } = useEnable2StepMutation();
@@ -16,6 +17,8 @@ const TwoStepVerification = () => {
   const [userInfo, setUserInfo] = useState<boolean>(false);
   const { data } = useGetUserQuery();
   const [open, setOpen] = useState(false);
+  const { isResendDisabled, formatCountdown, startCountdown, countdown } =
+    useCountdown();
 
   useEffect(() => {
     setUserInfo(data?.user?.is2StepEnabled);
@@ -30,6 +33,7 @@ const TwoStepVerification = () => {
         success,
         onSuccessCallback: () => {
           setOpen(true);
+          startCountdown();
         },
       });
     } else {
@@ -62,7 +66,14 @@ const TwoStepVerification = () => {
         </Text>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <Enable2Step setOpen={setOpen} data={data?.user} />
+        <Enable2Step
+          formatCountdown={formatCountdown}
+          countdown={countdown}
+          startCountdown={startCountdown}
+          isResendDisabled={isResendDisabled}
+          setOpen={setOpen}
+          data={data?.user}
+        />
       </Dialog>
     </>
   );

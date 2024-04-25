@@ -26,7 +26,7 @@ const Login = () => {
   const { handleLogin, setEncryptionKey, setPassword } =
     useContext(GlobalContext);
   const { emailValidation, passwordValidation } = schemaValidation;
-  const { mutateAsync } = useLoginMutation();
+  const { mutateAsync, isPending } = useLoginMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -75,14 +75,14 @@ const Login = () => {
             const encryptionSalt = response?.salt;
             const mk = response?.mk;
             const ivBase64 = response?.iv;
-            const sgek = await deriveKey(values.password, encryptionSalt);
+            const sek = await deriveKey(values.password, encryptionSalt);
 
             try {
-              const decryptedSGEK = await decryptUserData(mk, ivBase64, sgek);
-              const importMk = await importKeyFromBase64(decryptedSGEK);
+              const decryptedSek = await decryptUserData(mk, ivBase64, sek);
+              const importMk = await importKeyFromBase64(decryptedSek);
               setEncryptionKey && setEncryptionKey(importMk);
             } catch (error) {
-              console.error("Decryption of SGEK failed:", error);
+              console.error("Decryption of sek failed:", error);
             }
           }
         },
@@ -146,7 +146,7 @@ const Login = () => {
               </Link>
             </div>
 
-            <Button className="mt-6" variant="primary">
+            <Button isPending={isPending} className="mt-6" variant="primary">
               Log in
             </Button>
 

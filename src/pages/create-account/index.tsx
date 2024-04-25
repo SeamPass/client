@@ -30,7 +30,7 @@ const CreateAccount = () => {
   const { emailValidation, requiredFieldValidation } = schemaValidation;
   const [progress, setProgress] = useState(0);
   const passwordMessage = "Enter master password";
-  const { mutateAsync, data } = useCreateAccountMutation();
+  const { mutateAsync, data, isPending } = useCreateAccountMutation();
   const { mutateAsync: encryptionMutateAsync } = useEncryptionKeyMutation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [storePg, setStorePg] = useState<string | null>(null);
@@ -101,7 +101,7 @@ const CreateAccount = () => {
         message: message,
         onSuccessCallback: async () => {
           const masterKey = await generateKey();
-          const sgek = await deriveKey(
+          const sek = await deriveKey(
             values.password,
             response.data.encryptionSalt
           );
@@ -109,7 +109,7 @@ const CreateAccount = () => {
           // Generate an IV for encryption using the generated masterKey from the server
           const { ciphertextBase64, ivBase64 } = await encryptUserData(
             masterKey,
-            sgek
+            sek
           );
 
           //this send the encrypted master key to the server
@@ -215,7 +215,7 @@ const CreateAccount = () => {
                 </p>
               </div>
 
-              <div>
+              {/* <div>
                 <Input
                   label="Password hint"
                   type="hint"
@@ -231,7 +231,7 @@ const CreateAccount = () => {
                   }
                   icon={formik.touched.hint && !formik.errors.hint}
                 />
-              </div>
+              </div> */}
 
               {/* <div className="flex gap-2 text-[1rem]">
               <Checkbox />
@@ -245,7 +245,12 @@ const CreateAccount = () => {
               </span>
             </div> */}
 
-              <Button type="submit" className="mt-6" variant="primary">
+              <Button
+                isPending={isPending}
+                type="submit"
+                className="mt-6"
+                variant="primary"
+              >
                 Create account
               </Button>
 

@@ -12,11 +12,27 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import useGetUserQuery from "@/api/user/get-user";
+import useLogoutMutation from "@/api/auth/logout";
+import apiMessageHelper from "@/helpers/apiMessageHelper";
 
 const MobileNav = () => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const navigate = useNavigate();
   const { data } = useGetUserQuery();
+  const { mutateAsync } = useLogoutMutation();
+
+  const handleLogout = async () => {
+    const response = await mutateAsync();
+    const { success, message } = response;
+    apiMessageHelper({
+      success,
+      message,
+      onSuccessCallback: () => {
+        sessionStorage.clear();
+        window.location.reload();
+      },
+    });
+  };
 
   return (
     <>
@@ -32,7 +48,12 @@ const MobileNav = () => {
 
           {/* avatar */}
           <div className="flex items-center gap-2 md:gap-3">
-            <img className="size-8 md:size-10" src={avatar} alt="avatar" />
+            <div className="size-[40px] rounded-full overflow-hidden">
+              <img
+                src={data?.user ? data?.user?.avatar : avatar}
+                alt="avatar"
+              />
+            </div>
             <p>{data?.user?.nickname}</p>
 
             <DropdownMenu
@@ -60,7 +81,10 @@ const MobileNav = () => {
                 >
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-2 focus:bg-[#FFF4F3] focus:text-error-100 text-error-100 text-[1rem] cursor-pointer">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="py-2 focus:bg-[#FFF4F3] focus:text-error-100 text-error-100 text-[1rem] cursor-pointer"
+                >
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
