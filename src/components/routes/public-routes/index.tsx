@@ -8,7 +8,7 @@ const PublicRoutes = () => {
   return (
     <>
       {auth.token ? (
-        <Navigate to={"/password-vault"} />
+        <Navigate to={"/"} />
       ) : (
         <>
           <Outlet />

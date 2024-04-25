@@ -52,12 +52,11 @@ const AllRoutes = () => {
             <Route path="/locked" element={<Locked />} />
           </Route>
           <Route element={<LockedRoute />}>
+            <Route index element={<Password />} />
             <Route path="/secret-notes" element={<SecretNotes />} />
             <Route path="/wifi-details" element={<WifiDetails />} />
             <Route path="/security" element={<Security />} />
             <Route path="/profile" element={<Profile />} />
-
-            <Route index path="/password-vault" element={<Password />} />
           </Route>
         </Route>
       </Routes>
