@@ -1,3 +1,4 @@
+import useLogoutMutation from "@/api/auth/logout";
 import useGetUserQuery from "@/api/user/get-user";
 import useUnlockAccountMutation from "@/api/user/unlock-account";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,20 @@ const Locked = () => {
   const { setEncryptionKey } = useContext(GlobalContext);
   const { data: userData } = useGetUserQuery();
   const { mutateAsync, isPending } = useUnlockAccountMutation();
+  const { mutateAsync: logoutAsync } = useLogoutMutation();
+
+  const handleLogout = async () => {
+    const response = await logoutAsync();
+    const { success, message } = response;
+    apiMessageHelper({
+      success,
+      message,
+      onSuccessCallback: () => {
+        sessionStorage.clear();
+        window.location.reload();
+      },
+    });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -112,6 +127,7 @@ const Locked = () => {
           </Button>
 
           <Button
+            onClick={handleLogout}
             type="button"
             className="text-error-100 !w-fit !h-fit mx-auto mt-6 font-semibold text-base"
           >

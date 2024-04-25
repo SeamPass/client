@@ -44,7 +44,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navItems }) => {
               <div
                 key={index}
                 className={cn(
-                  location.pathname.includes(item.href) &&
+                  location.pathname === item.href &&
                     "bg-[#d6eaff]/30 text-primary-500/30 py-[9px] px-4 rounded-[16px]",
                   "flex items-center cursor-pointer "
                 )}
