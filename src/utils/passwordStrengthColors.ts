@@ -5,8 +5,8 @@ export const handlePasswordStrengthColors = (strength: string) => {
     case "weak":
       return colors.weak;
       break;
-    case "medium":
-      return colors.medium;
+    case "fair":
+      return colors.fair;
       break;
     case "strong":
       return colors.strong;

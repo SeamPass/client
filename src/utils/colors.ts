@@ -3,5 +3,5 @@ export const colors = {
   medium: "#BDFFFF",
   strong: "#4CAF50",
   compromised: "#BE2921",
-  good: "#EDAC60",
+  fair: "#EDAC60",
 };
