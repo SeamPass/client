@@ -17,7 +17,7 @@ export const usePasswordStrengthMeter = () => {
         break;
       case 2:
         strengthMessage = "Fair";
-        color = colors.good;
+        color = colors.fair;
         break;
       case 3:
       case 4:
