@@ -96,12 +96,12 @@ const AddPassword: React.FC<AddPasswordProps> = ({ setOpen }) => {
 
   return (
     <React.Fragment>
-      <DialogContent>
+      <DialogContent className="max-h-[700px]">
+        <ModalHeader
+          subText="Enter the necessary information to create a new password and save"
+          title="Add Password"
+        />
         <DialogDescription>
-          <ModalHeader
-            subText="Enter the necessary information to create a new password and save"
-            title="Add Password"
-          />
           <form onSubmit={formik.handleSubmit}>
             <div className="mt-6 flex flex-col space-y-3">
               <Input

@@ -13,19 +13,16 @@ export const usePasswordStrengthMeter = () => {
       case 0:
       case 1:
         strengthMessage = "Weak";
-        color = colors.weak;
+        color = colors.weak; // Red for example
         break;
       case 2:
         strengthMessage = "Fair";
-        color = colors.good;
+        color = colors.good; // Yellow for example
         break;
       case 3:
-        strengthMessage = "Good";
-        color = colors.medium;
-        break;
       case 4:
         strengthMessage = "Strong";
-        color = colors.strong;
+        color = colors.strong; // Green for example
         break;
       default:
         strengthMessage = "Weak";

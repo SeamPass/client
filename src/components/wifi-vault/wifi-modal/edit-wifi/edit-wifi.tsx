@@ -79,10 +79,12 @@ const EditWifi: FC<EditWifiProps> = ({ setOpen, data }) => {
 
   return (
     <>
-      <DialogContent>
+      <DialogContent className="max-h-[400px]">
+        <ModalHeader
+          subText="Let PassSafe save your Wifi details for you"
+          title="Edit Wifi Details"
+        />
         <DialogDescription>
-          <ModalHeader title="Edit Wifi Details" />
-
           <form
             onSubmit={formik.handleSubmit}
             className="mt-6 flex flex-col space-y-4"

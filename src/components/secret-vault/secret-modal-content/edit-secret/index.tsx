@@ -75,13 +75,12 @@ const EditSecret: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   });
 
   return (
-    <DialogContent>
+    <DialogContent className="max-h-[450px]">
+      <ModalHeader
+        subText="Save and secure important notes here"
+        title="Edit Secret note"
+      />
       <DialogDescription>
-        <ModalHeader
-          subText="Save and secure important notes here"
-          title="Edit Secret note"
-        />
-
         <form
           onSubmit={formik.handleSubmit}
           className="mt-6 flex flex-col space-y-4"

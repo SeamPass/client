@@ -49,10 +49,12 @@ const ViewWifi: FC<ViewWifiProps> = ({ data }) => {
 
   return (
     <>
-      <DialogContent>
+      <DialogContent className="max-h-[300px]">
+        <ModalHeader
+          subText="Let PassSafe save your Wifi details for you"
+          title="Wifi Details"
+        />
         <DialogDescription>
-          <ModalHeader title="Wifi Details" />
-
           <form
             onSubmit={formik.handleSubmit}
             className="mt-6 flex flex-col space-y-4"

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input } from "@/components/ui/input";
 // import Headset from "@/assets/icons/headset.svg?react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Logo from "@/shared/components/logo";
 import Header from "@/shared/components/typography/Header";
 import Text from "@/shared/components/typography";
@@ -20,6 +21,7 @@ import { deriveKey } from "@/utils/keyUtils";
 import { importKeyFromBase64 } from "@/utils/generateKey";
 import { hashPassword } from "@/utils/hashPassword";
 import axiosInstance from "@/config/axios";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -42,51 +44,54 @@ const Login = () => {
       }),
     }),
     onSubmit: async (values) => {
-      const saltResponse = await axiosInstance(
-        `/get-salt?email=${encodeURIComponent(values.email)}`
-      );
+      try {
+        const saltResponse = await axiosInstance(
+          `/get-salt?email=${encodeURIComponent(values.email)}`
+        );
+        const hashedPassword = await hashPassword(
+          values.password,
+          saltResponse?.data?.salt
+        );
 
-      const hashedPassword = await hashPassword(
-        values.password,
-        saltResponse?.data?.salt
-      );
+        const response = await mutateAsync({
+          password: hashedPassword,
+          email: values.email,
+        });
 
-      const response = await mutateAsync({
-        password: hashedPassword,
-        email: values.email,
-      });
+        const { success, accessToken, message, expiresIn } = response;
 
-      const { success, accessToken, message, expiresIn } = response;
+        apiMessageHelper({
+          success,
+          message: message ?? "Login Successful",
+          onSuccessCallback: async () => {
+            if (response.is2StepEnabled) {
+              setPassword && setPassword(values.password);
+              navigate(`/enter-otp?email=${values.email}`);
+            } else {
+              handleLogin && handleLogin(accessToken);
+              sessionStorage.setItem("accessToken", accessToken);
+              const adjustedExpiresIn = expiresIn - 60;
+              sessionStorage.setItem("expiresIn", adjustedExpiresIn.toString());
 
-      apiMessageHelper({
-        success,
-        message: message ?? "Login Successful",
-        onSuccessCallback: async () => {
-          if (response.is2StepEnabled) {
-            setPassword && setPassword(values.password);
-            navigate(`/enter-otp?email=${values.email}`);
-          } else {
-            handleLogin && handleLogin(accessToken);
-            sessionStorage.setItem("accessToken", accessToken);
-            const adjustedExpiresIn = expiresIn - 60;
-            sessionStorage.setItem("expiresIn", adjustedExpiresIn.toString());
+              //decryption taking place here
+              const encryptionSalt = response?.salt;
+              const mk = response?.mk;
+              const ivBase64 = response?.iv;
+              const sek = await deriveKey(values.password, encryptionSalt);
 
-            //decryption taking place here
-            const encryptionSalt = response?.salt;
-            const mk = response?.mk;
-            const ivBase64 = response?.iv;
-            const sek = await deriveKey(values.password, encryptionSalt);
-
-            try {
-              const decryptedSek = await decryptUserData(mk, ivBase64, sek);
-              const importMk = await importKeyFromBase64(decryptedSek);
-              setEncryptionKey && setEncryptionKey(importMk);
-            } catch (error) {
-              console.error("Decryption of sek failed:", error);
+              try {
+                const decryptedSek = await decryptUserData(mk, ivBase64, sek);
+                const importMk = await importKeyFromBase64(decryptedSek);
+                setEncryptionKey && setEncryptionKey(importMk);
+              } catch (error) {
+                console.error("Decryption of sek failed:", error);
+              }
             }
-          }
-        },
-      });
+          },
+        });
+      } catch (error: any) {
+        toast.error(error.response.data.message);
+      }
     },
   });
 
@@ -138,12 +143,12 @@ const Login = () => {
                     : ""
                 }
               />
-              <Link
+              {/* <Link
                 to={"/forgot-password"}
                 className="text-secondary-200 text-sm font-medium mt-2"
               >
                 Forgot Password ?
-              </Link>
+              </Link> */}
             </div>
 
             <Button isPending={isPending} className="mt-6" variant="primary">

@@ -88,7 +88,7 @@ const ProfilePage = () => {
       <div className="w-full flex flex-col  md:flex-row md:space-x-10  lg:w-[754px] rounded-[16px] bg-white p-3 md:p-4 lg:p-10 mt-[17px]">
         <div className="flex  flex-shrink-0 relative w-[200px] h-[200px] mx-auto overflow-hidden rounded-full ">
           <img
-            src={!data?.user?.avatar ? avatar : data?.user?.avatar}
+            src={data?.user?.avatar || avatar}
             className=" object-cover"
             alt="profile "
           />

@@ -1,7 +1,7 @@
 export const colors = {
-  weak: "#989B13",
-  medium: "#989B13",
+  weak: "#FF8079",
+  medium: "#BDFFFF",
   strong: "#4CAF50",
   compromised: "#BE2921",
-  good: "#",
+  good: "#EDAC60",
 };
