@@ -26,16 +26,16 @@ const DeleteModal: FC<DeleteModalProps> = ({
   const passwordIds = deleteData?.map((item) => item.id);
 
   return (
-    <DialogContent>
+    <DialogContent className=" max-h-[90vh] !h-fit ">
+      <ModalHeader
+        subText="This action cannot be undone"
+        title={`Permanently Delete ${
+          deleteData ? deleteData?.length : ""
+        } Logins`}
+      />
       <DialogDescription>
-        <ModalHeader
-          subText="This action cannot be undone"
-          title={`Permanently Delete ${
-            deleteData ? deleteData?.length : ""
-          } Logins`}
-        />
         <ComponentVisibility appear={!!deleteData?.length}>
-          <div className="mt-7 space-y-6">
+          <div className="mt-7 space-y-6 ">
             {deleteData?.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
                 <LockKeyIcon />

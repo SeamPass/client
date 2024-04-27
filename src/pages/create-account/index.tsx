@@ -88,25 +88,23 @@ const CreateAccount = () => {
 
     onSubmit: async (values) => {
       const salt = generateSalt();
+      const encryptionSalt = generateSalt();
       const hashedPassword = await hashPassword(values.password, salt);
-      console.log(hashedPassword);
+
       const response = await mutateAsync({
         hashedPassword,
         nickname: values.nickname,
         email: values.email,
         clientSalt: salt,
       });
-      console.log(response);
+
       const { message, success, data } = response;
       apiMessageHelper({
         success,
         message: message,
         onSuccessCallback: async () => {
           const masterKey = await generateKey();
-          const sek = await deriveKey(
-            values.password,
-            response.data.encryptionSalt
-          );
+          const sek = await deriveKey(values.password, encryptionSalt);
 
           // Generate an IV for encryption using the generated masterKey from the server
           const { ciphertextBase64, ivBase64 } = await encryptUserData(
@@ -120,7 +118,7 @@ const CreateAccount = () => {
               userId: data?.id,
               mk: ciphertextBase64,
               iv: ivBase64,
-              salt: response?.data?.encryptionSalt,
+              salt: encryptionSalt,
             });
           }
 

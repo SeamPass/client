@@ -13,26 +13,11 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGetUserQuery from "@/api/user/get-user";
-import useLogoutMutation from "@/api/auth/logout";
-import apiMessageHelper from "@/helpers/apiMessageHelper";
+import { handleLogout } from "@/utils/logout";
 
 const ExtendedNav = () => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const { data: userData } = useGetUserQuery();
-  const { mutateAsync } = useLogoutMutation();
-
-  const handleLogout = async () => {
-    const response = await mutateAsync();
-    const { success, message } = response;
-    apiMessageHelper({
-      success,
-      message,
-      onSuccessCallback: () => {
-        sessionStorage.clear();
-        window.location.reload();
-      },
-    });
-  };
 
   const navigate = useNavigate();
   return (

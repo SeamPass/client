@@ -60,10 +60,9 @@ const ViewSecret: FC<ViewSecretProps> = ({
 
   return (
     <>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] !h-fit">
+        <ModalHeader title="My Diary" />
         <DialogDescription>
-          <ModalHeader title="My Diary" />
-
           <div className="mt-[33px]">
             <Text>{formik.values.note}</Text>
           </div>

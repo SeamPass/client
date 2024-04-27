@@ -17,6 +17,7 @@ import { generateSalt, hashPassword } from "@/utils/hashPassword";
 import { decryptUserData, encryptUserData } from "@/utils/EncryptDecrypt";
 import useUpdateEncryptionKeyMutation from "@/api/encryptionKey/update-keys";
 import useGetUserQuery from "@/api/user/get-user";
+import { handleLogout } from "@/utils/logout";
 
 const ChangePassword = () => {
   const [progress, setProgress] = useState(0);
@@ -56,12 +57,10 @@ const ChangePassword = () => {
         values.currentPassword,
         userData?.user?.clientSalt
       );
-      console.log(userData?.clientSalt);
-      console.log(values.currentPassword);
-      console.log(hashedPassword);
+
+      const newEncryptionSalt = generateSalt();
       const newSalt = generateSalt();
       const newHashedPassword = await hashPassword(values.password, newSalt);
-      console.log(newHashedPassword);
       try {
         const response = await mutateAsync({
           oldPassword: hashedPassword,
@@ -69,29 +68,25 @@ const ChangePassword = () => {
           confirmNewPassword: newHashedPassword,
           newSalt,
         });
+
         const { success, message } = response;
-        console.log(response);
+
         apiMessageHelper({
           success,
           message,
           onSuccessCallback: async () => {
-            const sgek = await deriveKey(values.currentPassword, response.ps);
-            const newSalt = generateSalt();
-            const newSgek = await deriveKey(values.password, newSalt);
+            const sgek = await deriveKey(values.currentPassword, response.salt);
+
+            const newSgek = await deriveKey(values.password, newEncryptionSalt);
+
             const decryptMasterKey = await decryptUserData(
               response.mk,
               response.iv,
               sgek
             );
 
-            console.log("decryptMasterKey", decryptMasterKey);
             const encryptKey = await encryptUserData(decryptMasterKey, newSgek);
-            console.log(
-              "cipher:",
-              encryptKey.ciphertextBase64,
-              "iv:",
-              encryptKey.ivBase64
-            );
+
             if (
               encryptKey?.ciphertextBase64 &&
               encryptKey?.ivBase64 &&
@@ -100,9 +95,10 @@ const ChangePassword = () => {
               await updateKeys({
                 mk: encryptKey?.ciphertextBase64,
                 iv: encryptKey?.ivBase64,
-                newSalt,
+                newSalt: newEncryptionSalt,
               });
             }
+            handleLogout();
           },
         });
       } catch (err) {

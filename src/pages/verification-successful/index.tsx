@@ -43,7 +43,7 @@ const VerificationSuccessful = () => {
               onClick={() => navigate("/login")}
               size="md"
               variant="primary"
-              className="mt-4 lg:mt-6 md:!w-[202px]"
+              className="mt-4 lg:mt-6 md:!w-[202px] mx-auto"
             >
               Log into your account
             </Button>

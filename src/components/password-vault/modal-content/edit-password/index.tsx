@@ -100,12 +100,12 @@ const EditPassword: React.FC<EditPasswordProps> = ({ setOpen, data }) => {
   }, [password]);
 
   return (
-    <DialogContent>
+    <DialogContent className="max-h-[700px]">
+      <ModalHeader
+        subText="Enter the necessary information to create a new password and save"
+        title="Edit Password"
+      />
       <DialogDescription>
-        <ModalHeader
-          subText="Enter the necessary information to create a new password and save"
-          title="Edit Password"
-        />
         <form onSubmit={formik.handleSubmit}>
           <div className="mt-6 flex flex-col space-y-3">
             <Input

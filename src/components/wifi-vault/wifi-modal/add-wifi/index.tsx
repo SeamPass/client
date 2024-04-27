@@ -64,13 +64,12 @@ const AddWifi: FC<AddWifiProps> = ({ setOpen }) => {
   });
 
   return (
-    <DialogContent>
+    <DialogContent className="max-h-[400px]">
+      <ModalHeader
+        subText="Let PassSafe save your Wifi details for you"
+        title="Add Wifi Details"
+      />
       <DialogDescription>
-        <ModalHeader
-          subText="Let PassSafe save your Wifi details for you"
-          title="Add Wifi Details"
-        />
-
         <form
           onSubmit={formik.handleSubmit}
           className="mt-6 flex flex-col space-y-4"
