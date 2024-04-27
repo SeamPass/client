@@ -26,7 +26,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
   const passwordIds = deleteData?.map((item) => item.id);
 
   return (
-    <DialogContent className=" !containermax-h-[90vh] sm:!h-fit ">
+    <DialogContent className=" !max-h-[70vh] !h-fit ">
       <ModalHeader
         subText="This action cannot be undone"
         title={`Permanently Delete ${
