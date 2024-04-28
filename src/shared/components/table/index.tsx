@@ -6,9 +6,10 @@ import Pagination from "../pagination";
 import ComponentVisibility from "../componentVisibility";
 import { Cancel01Icon } from "hugeicons-react";
 import Empty from "../empty";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../button";
 // import DeleteModal from "../modal/delete-modal";
+import AddWifi from "@/components/wifi-vault/wifi-modal/add-wifi";
 
 interface TableComponentProps {
   tableHeaders: string[];
@@ -67,10 +68,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                   <span className="text-error-100 cursor-pointer">Delete</span>{" "}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-h-[400px] !h-fit">
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-              </DialogContent>
+              <AddWifi open={open} setOpen={setOpen} />
               {/* <DeleteModal
                 deleteData={itemsToDelete}
                 open={open}
