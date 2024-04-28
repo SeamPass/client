@@ -142,7 +142,7 @@ const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
             {passwordStrength}
           </span>
           <input
-            disabled
+            readOnly
             type="text"
             className="flex-1 !text-primary-300 !font-semibold !text-sm outline-none pt-2 px-4 bg-transparent "
             value={password}
