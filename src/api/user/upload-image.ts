@@ -24,7 +24,6 @@ const useUploadImageMutation = () => {
 
       return data;
     } catch (err: any) {
-      console.error("Upload failed:", err);
       return err.response?.data ?? "Something went wrong";
     }
   };

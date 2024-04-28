@@ -15,7 +15,6 @@ interface ActionPopoverProps {
   }[];
 }
 const ActionPopover: React.FC<ActionPopoverProps> = ({ actions }) => {
-  console.log(actions);
   return (
     <PopoverContent className="w-[170px] absolute right-[-30px] shadow-none border-[0.5px] border-grey-200">
       <ul className="md:space-y-3">

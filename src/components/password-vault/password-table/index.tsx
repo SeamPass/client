@@ -122,7 +122,7 @@ const PasswordTable = () => {
         ? await deleteMultiple({ passwordIds: id })
         : await mutateAsync(id);
     const { message, success } = response;
-    console.log(success);
+
     apiMessageHelper({
       message,
       success,

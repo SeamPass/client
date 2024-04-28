@@ -23,7 +23,6 @@ const useGeneratePassword = () => {
     if (wordList.length === 0) return;
 
     if (wordList.length < 3) {
-      console.error("Word list is too short.");
       return;
     }
 

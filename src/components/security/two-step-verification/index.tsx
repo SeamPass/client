@@ -49,7 +49,7 @@ const TwoStepVerification = () => {
 
   return (
     <>
-      <div className="bg-white px-[44px] py-[33px]">
+      <div className="bg-white px-[16px] md:px-[44px] py-[33px]">
         <div className="flex items-center justify-between">
           <Header size="md" weight="medium" variant="primary-100">
             Enable Two- step verification

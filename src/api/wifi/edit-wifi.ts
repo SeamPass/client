@@ -10,7 +10,6 @@ export interface IAddWifiProps {
 
 const useEditWifiMutation = (id: string) => {
   const handleEditWifi = async (userWifiInfo: IAddWifiProps) => {
-    console.log(id);
     try {
       const { data } = await axiosInstance.put<IAddWifiProps>(
         `/update-wifi/${id}`,
