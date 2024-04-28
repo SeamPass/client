@@ -144,7 +144,7 @@ const RandomGenerator: React.FC<RandomGeneratorProps> = () => {
           <input
             disabled
             type="text"
-            className="flex-1  outline-none pt-2 px-4 bg-transparent "
+            className="flex-1 !text-primary-300 !font-semibold !text-sm outline-none pt-2 px-4 bg-transparent "
             value={password}
           />
         </div>

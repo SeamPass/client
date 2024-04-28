@@ -10,9 +10,10 @@ import useGetUserQuery from "@/api/user/get-user";
 import useEnable2StepMutation from "@/api/email-verification/enable2Step";
 import useDisable2StepMutation from "@/api/email-verification/disable2Step";
 import { useCountdown } from "@/hooks/useCountdown";
+import { Loader } from "@/shared/components/loader";
 
 const TwoStepVerification = () => {
-  const { mutateAsync: enable2Step } = useEnable2StepMutation();
+  const { mutateAsync: enable2Step, isPending } = useEnable2StepMutation();
   const { mutateAsync: disable2Step } = useDisable2StepMutation();
   const [userInfo, setUserInfo] = useState<boolean>(false);
   const { data } = useGetUserQuery();
@@ -53,7 +54,11 @@ const TwoStepVerification = () => {
           <Header size="md" weight="medium" variant="primary-100">
             Enable Two- step verification
           </Header>
-          <Switch onCheckedChange={handleCheckChange} checked={userInfo} />
+          {isPending ? (
+            <Loader className=" border-primary-500" />
+          ) : (
+            <Switch onCheckedChange={handleCheckChange} checked={userInfo} />
+          )}
         </div>
         <Text size="sm" variant="primary" className=" mt-0.5 md:mt-3">
           Two step email verification is an extra layer of security for your
