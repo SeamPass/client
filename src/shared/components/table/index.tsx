@@ -6,10 +6,9 @@ import Pagination from "../pagination";
 import ComponentVisibility from "../componentVisibility";
 import { Cancel01Icon } from "hugeicons-react";
 import Empty from "../empty";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../button";
 // import DeleteModal from "../modal/delete-modal";
-import { DialogContent } from "@radix-ui/react-dialog";
 
 interface TableComponentProps {
   tableHeaders: string[];
