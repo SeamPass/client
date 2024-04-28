@@ -8,7 +8,8 @@ import { Cancel01Icon } from "hugeicons-react";
 import Empty from "../empty";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../button";
-import DeleteModal from "../modal/delete-modal";
+// import DeleteModal from "../modal/delete-modal";
+import { DialogContent } from "@radix-ui/react-dialog";
 
 interface TableComponentProps {
   tableHeaders: string[];
@@ -42,7 +43,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   currentPage,
   handlePageCount,
   setPageCount,
-  handleDelete,
+  // handleDelete,
   open,
   setOpen,
 }) => {
@@ -53,7 +54,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
       tableHeaders[tableHeaders.length - 1],
     ].includes(item);
 
-  const itemsToDelete = isTableDataSelected;
+  // const itemsToDelete = isTableDataSelected;
 
   return (
     <>
@@ -67,12 +68,31 @@ const TableComponent: React.FC<TableComponentProps> = ({
                   <span className="text-error-100 cursor-pointer">Delete</span>{" "}
                 </Button>
               </DialogTrigger>
-              <DeleteModal
+              <DialogContent className="max-h-[400px]">
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+                <p>jwjejwenpqiuyxyerueheuwq</p>
+              </DialogContent>
+              {/* <DeleteModal
                 deleteData={itemsToDelete}
                 open={open}
                 setOpen={setOpen}
                 handleDelete={handleDelete}
-              />
+              /> */}
             </Dialog>
 
             <Cancel01Icon
