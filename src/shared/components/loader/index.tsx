@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 export const PageLoader = () => {
   return (
     <div className="w-screen flex h-screen   justify-center items-center bg-primary-300/80">
@@ -6,8 +8,13 @@ export const PageLoader = () => {
   );
 };
 
-export const Loader = () => {
+export const Loader = ({ className }: { className?: string }) => {
   return (
-    <div className="size-6 border-2 border-r-[1px] border-l-[1px]  animate-spin  border-b-transparent rounded-full border-white " />
+    <div
+      className={cn(
+        "size-6 border-2 border-r-[1px] border-l-[1px]  animate-spin  border-b-transparent rounded-full border-white ",
+        className
+      )}
+    />
   );
 };

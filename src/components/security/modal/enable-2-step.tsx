@@ -62,7 +62,7 @@ const Enable2Step: FC<Enable2StepProps> = ({
 
   return (
     <>
-      <DialogContent>
+      <DialogContent className="max-h-[380px]">
         <DialogDescription>
           <div className="w-full ">
             <Text size="lg" variant="primary" className=" mt-2 lg:mt-4">

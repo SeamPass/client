@@ -20,7 +20,7 @@ const GeneratePassword = () => {
   const navigate = useNavigate();
 
   return (
-    <DialogContent className="max-h-[700px] ">
+    <DialogContent className="max-h-[700px]">
       <ModalHeader
         subText=" Let passSafe create a unique password for you.Once you are done you
       can copy and save"
@@ -31,17 +31,17 @@ const GeneratePassword = () => {
         <Tabs
           defaultValue="random"
           onValueChange={(value: string) => navigate(`?type=${value}`)}
-          className="w-full mt-[24px]"
+          className="w-full  mt-[24px]"
         >
-          <TabsList className="max-w-[309px] h-[59px] p-2 justify-start bg-[#F3F9FF] ">
+          <TabsList className="w-full max-w-[409px] h-[59px] p-2 justify-start bg-[#F3F9FF] ">
             <TabsTrigger
-              className="h-[39px] px-[10px] text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px] "
+              className="h-[39px]  px-[10px] w-full text-[12px] sm:text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px] "
               value="random"
             >
               Generate password
             </TabsTrigger>
             <TabsTrigger
-              className="h-[39px] px-[10px] text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px]"
+              className="h-[39px]  w-full  px-[10px] text-[12px] sm:text-[14px] text-primary-100 data-[state=active]:text-[#F6FAFF] data-[state=active]:bg-primary-500 rounded-[4px]"
               value="memorable"
             >
               Memorable password

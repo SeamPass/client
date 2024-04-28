@@ -3,12 +3,8 @@ import { cn } from "@/lib/utils";
 import Text from "@/shared/components/typography";
 import { InformationDiamondIcon } from "hugeicons-react";
 import { FC } from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
+import { Tooltip } from "react-tooltip";
 
 type CustomGeneratePasswordProps = {
   options: { [key: string]: boolean };
@@ -62,28 +58,24 @@ const CustomGeneratePassword: FC<CustomGeneratePasswordProps> = ({
             <Text size="normal" variant="primary-200">
               {option}
             </Text>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <InformationDiamondIcon className="size-5 text-[#197CE2] cursor-pointer" />
-                </TooltipTrigger>
-                <TooltipContent
-                  avoidCollisions={true}
-                  className=" relative bg-primary-100 "
-                >
-                  <Text size="md" weight="medium" className="text-white">
-                    {tooltipsInfo[option].header}
-                  </Text>
-                  <Text
-                    weight="regular"
-                    className="text-white text-[12px] max-w-[150px] w-full"
-                  >
-                    {tooltipsInfo[option].message}
-                  </Text>
-                  <div className="bg-primary-100 w-[14px] h-2 absolute -bottom-[1px] -translate-x-[50%] left-[50%] rotate-45" />
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <a data-tooltip-id={`tooltip-${index}`}>
+              <InformationDiamondIcon className="size-5 text-[#197CE2] cursor-pointer" />
+            </a>
+            <Tooltip
+              id={`tooltip-${index}`}
+              style={{ backgroundColor: "#001F3F" }}
+              className="opaque"
+            >
+              <Text size="md" weight="medium" className="text-white">
+                {tooltipsInfo[option].header}
+              </Text>
+              <Text
+                weight="regular"
+                className="text-white text-[12px] max-w-[150px] w-full"
+              >
+                {tooltipsInfo[option].message}
+              </Text>
+            </Tooltip>
           </div>
           <Switch
             checked={options[option]}

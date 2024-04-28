@@ -11,6 +11,7 @@ import ModalHeader from "@/shared/modal-header";
 import { useState } from "react";
 import WifiModal from "./wifi-modal";
 import WebsiteNameModal from "./website--name-modal";
+import { cn } from "@/lib/utils";
 
 const GeneratorModal = ({
   open,
@@ -24,7 +25,9 @@ const GeneratorModal = ({
   const [value, setValue] = useState("wifi");
 
   return (
-    <DialogContent>
+    <DialogContent
+      className={cn("max-h-[500px]", value !== "wifi" && "max-h-[700px]")}
+    >
       <ModalHeader title="Copy and save" />
       <Select onValueChange={(value) => setValue(value)}>
         <Label
