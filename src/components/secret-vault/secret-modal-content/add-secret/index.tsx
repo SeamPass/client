@@ -60,7 +60,7 @@ const AddSecret: React.FC<AddSecretProps> = ({ setOpen }) => {
   });
 
   return (
-    <DialogContent>
+    <DialogContent className="max-h-[400px]">
       <DialogDescription>
         <ModalHeader
           subText="Save and secure important notes here"

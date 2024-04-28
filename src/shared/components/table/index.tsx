@@ -8,8 +8,7 @@ import { Cancel01Icon } from "hugeicons-react";
 import Empty from "../empty";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../button";
-// import DeleteModal from "../modal/delete-modal";
-import AddWifi from "@/components/wifi-vault/wifi-modal/add-wifi";
+import DeleteModal from "../modal/delete-modal";
 
 interface TableComponentProps {
   tableHeaders: string[];
@@ -43,7 +42,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   currentPage,
   handlePageCount,
   setPageCount,
-  // handleDelete,
+  handleDelete,
   open,
   setOpen,
 }) => {
@@ -54,34 +53,33 @@ const TableComponent: React.FC<TableComponentProps> = ({
       tableHeaders[tableHeaders.length - 1],
     ].includes(item);
 
-  // const itemsToDelete = isTableDataSelected;
+  const itemsToDelete = isTableDataSelected;
 
   return (
     <>
       <ComponentVisibility appear={isTableDataSelected.length > 0}>
         <div className="bg-[#FFF4F3] flex px-6 items-center justify-between h-[56px] mt-[24px] rounded-[8px]">
           <span>{isTableDataSelected.length} Logins Selected</span>
-          <span className="flex items-center gap-[16px] text-[#330D0B]">
+          <div className="flex items-center gap-[16px] text-[#330D0B]">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button className="!w-fit !h-fit text-[#F6FAFF] flex items-center justify-center  gap-2">
                   <span className="text-error-100 cursor-pointer">Delete</span>{" "}
                 </Button>
               </DialogTrigger>
-              <AddWifi open={open} setOpen={setOpen} />
-              {/* <DeleteModal
+              <DeleteModal
                 deleteData={itemsToDelete}
                 open={open}
                 setOpen={setOpen}
                 handleDelete={handleDelete}
-              /> */}
+              />
             </Dialog>
 
             <Cancel01Icon
               onClick={() => setIsTableDataSelected([])}
               className="size-4 md:size-5"
             />
-          </span>
+          </div>
         </div>
       </ComponentVisibility>
 
