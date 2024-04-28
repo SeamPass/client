@@ -67,22 +67,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                   <span className="text-error-100 cursor-pointer">Delete</span>{" "}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-h-[400px]">
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
-                <p>jwjejwenpqiuyxyerueheuwq</p>
+              <DialogContent className="max-h-[400px] !h-fit">
                 <p>jwjejwenpqiuyxyerueheuwq</p>
                 <p>jwjejwenpqiuyxyerueheuwq</p>
               </DialogContent>
