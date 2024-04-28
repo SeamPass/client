@@ -11,7 +11,6 @@ interface UserPayload {
 
 const useCreateAccountMutation = () => {
   const handleCreateAccount = async (userDetails: UserPayload) => {
-    console.log(userDetails);
     try {
       const { data } = await axiosInstance.post<UserPayload>(
         "/register-user",
