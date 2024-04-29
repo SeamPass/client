@@ -5,15 +5,13 @@ import PublicRoutes from "./public-routes";
 import LockedRoute from "./locked-routes";
 import UnlockedRoute from "./unlocked-routes";
 import loader from "@/assets/loader/loader.svg";
+import Login from "@/pages/login";
+import CreateAccount from "@/pages/create-account";
 
 // Lazy-loaded pages
 const Security = lazy(() => import("@/pages/Security"));
-const CreateAccount = lazy(() => import("@/pages/create-account"));
-const ForgotPassword = lazy(() => import("@/pages/forgot-password"));
-const Login = lazy(() => import("@/pages/login"));
 const EnterOtp = lazy(() => import("@/pages/otp"));
 const Password = lazy(() => import("@/pages/password"));
-const SetNewPassword = lazy(() => import("@/pages/set-new-password"));
 const VerificationSuccessful = lazy(
   () => import("@/pages/verification-successful")
 );
@@ -36,9 +34,7 @@ const AllRoutes = () => {
         <Route element={<PublicRoutes />}>
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/set-new-password" element={<SetNewPassword />} />
-          {/* <Route path="/thank-you" element={<ThankYouForJoining />} /> */}
+
           <Route
             path="/verification-successful"
             element={<VerificationSuccessful />}
