@@ -136,6 +136,7 @@ const PasswordTable = () => {
     ),
     MobileTable: (
       <MobileTableAction
+        setIsTableDataSelected={setIsTableDataSelected}
         item={item}
         tableHeaders={tableHeaders}
         actions={actions}

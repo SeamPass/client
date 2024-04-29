@@ -14,13 +14,14 @@ interface MobileTableActionProps<T> {
     Component: (props: T) => ReactNode;
   }[];
   handleDelete: (id: any, callback: () => void) => Promise<void>;
+  setIsTableDataSelected: (isTableSelected: []) => void;
 }
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MobileTableAction = ({
   item,
   actions,
   handleDelete,
+  setIsTableDataSelected,
 }: MobileTableActionProps<any>) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openView, setOpenView] = useState(false);
@@ -102,6 +103,7 @@ const MobileTableAction = ({
       tableHeaders={tableHeaders}
       actions={updatedAction}
       handleDelete={handleDelete}
+      setIsTableDataSelected={setIsTableDataSelected}
     />
   );
 };

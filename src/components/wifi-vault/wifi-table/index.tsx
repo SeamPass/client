@@ -161,6 +161,7 @@ const WifiTable = () => {
         tableHeaders={tableHeaders}
         actions={actions}
         handleDelete={handleDelete}
+        setIsTableDataSelected={setIsTableDataSelected}
       />
     ),
   }));

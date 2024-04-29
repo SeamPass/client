@@ -202,6 +202,7 @@ const PasswordTable = () => {
         tableHeaders={tableHeaders}
         actions={actions}
         handleDelete={handleDelete}
+        setIsTableDataSelected={setIsTableDataSelected}
       />
     ),
   }));
