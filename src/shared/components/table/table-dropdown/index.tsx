@@ -16,6 +16,7 @@ interface TableDropdownProps<T> {
 
   handleDelete: (id: any, callback: () => void) => Promise<void>;
   data: any;
+  setIsTableDataSelected: (isTableSelected: []) => void;
 }
 
 const TableDropdown: React.FC<TableDropdownProps<any>> = ({
@@ -24,6 +25,7 @@ const TableDropdown: React.FC<TableDropdownProps<any>> = ({
   tableHeaders,
   actions,
   handleDelete,
+  setIsTableDataSelected,
 }) => {
   return (
     <div className="w-full px-4 pt-[14px]  space-y-4">
@@ -56,7 +58,10 @@ const TableDropdown: React.FC<TableDropdownProps<any>> = ({
                   ? " text-error-100"
                   : "text-grey-100"
               )}
-              onClick={() => act.action()}
+              onClick={() => {
+                act.action();
+                setIsTableDataSelected([]);
+              }}
               size="sm"
             >
               {act.name}
