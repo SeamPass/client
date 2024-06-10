@@ -240,7 +240,7 @@ const CreateAccount = () => {
                   By clicking the checkbox,you agree to
                 </span>
                 <span className=" text-secondary-200 ml-1">
-                  PassSafe Terms and conditions
+                  SeamPass Terms and conditions
                 </span>
               </span>
             </div> */}

@@ -22,7 +22,7 @@ const GeneratePassword = () => {
   return (
     <DialogContent className="max-h-[700px]">
       <ModalHeader
-        subText=" Let passSafe create a unique password for you.Once you are done you
+        subText=" Let SeamPass create a unique password for you.Once you are done you
       can copy and save"
         title="Generate Password"
       />
