@@ -28,7 +28,7 @@ const ThankYouForJoining: React.FC<ThankYouForJoiningProps> = ({
       <div className="w-full md:w-[538px] text-center">
         <Logo />
         <Header size="xl" variant="primary-100" weight="medium">
-          Thank you for joining PassSafe
+          Thank you for joining SeamPass
         </Header>
         <Text size="lg" variant="primary" className=" mt-2 lg:mt-4">
           To ensure the security of your account, We sent a Verification link to

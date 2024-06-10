@@ -81,7 +81,7 @@ const EditWifi: FC<EditWifiProps> = ({ setOpen, data }) => {
     <>
       <DialogContent className="max-h-[400px]">
         <ModalHeader
-          subText="Let PassSafe save your Wifi details for you"
+          subText="Let SeamPass save your Wifi details for you"
           title="Edit Wifi Details"
         />
         <DialogDescription>

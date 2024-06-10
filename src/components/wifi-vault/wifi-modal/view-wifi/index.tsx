@@ -51,7 +51,7 @@ const ViewWifi: FC<ViewWifiProps> = ({ data }) => {
     <>
       <DialogContent className="max-h-[350px]">
         <ModalHeader
-          subText="Let PassSafe save your Wifi details for you"
+          subText="Let SeamPass save your Wifi details for you"
           title="Wifi Details"
         />
         <DialogDescription>
